@@ -1,6 +1,5 @@
-import {getChatGPTUser} from '../../chatgpt-auth';
+import {getBrowserIdentity} from '../../chatgpt-auth';
 import {nativeIdentity} from '../../native-auth';
-import {headers as requestHeaders} from 'next/headers';
 import {getDb} from '../../../db';
 import {nativeDevices} from '../../../db/schema';
 import {and,eq} from 'drizzle-orm';
@@ -13,11 +12,9 @@ export async function GET(request:Request){
  return user?Response.json({userId:user.userId,name:user.displayName},{headers}):Response.json({error:'Autorize este Mac no navegador.'},{status:401,headers});
 }
 export async function POST(request:Request){
- // Approval requires the real browser sign-in, never an existing device cookie.
- const trusted=await requestHeaders();
- if(!trusted.get('oai-authenticated-user-id')||!trusted.get('oai-authenticated-user-email'))return Response.json({error:'Entre com ChatGPT no navegador.'},{status:401,headers});
+ // Approval requires verified browser sign-in, never an existing device cookie.
  if(request.headers.get('Origin')!==new URL(request.url).origin||!request.headers.get('Content-Type')?.includes('application/json'))return Response.json({error:'Origem inválida.'},{status:403,headers});
- const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre novamente.'},{status:401,headers});
+ const user=await getBrowserIdentity();if(!user)return Response.json({error:'Entre novamente no navegador.'},{status:401,headers});
  try{
   const raw=await request.text();if(raw.length>1000)throw new Error('Solicitação inválida.');
   const body:unknown=JSON.parse(raw);if(!validApproval(body))throw new Error('Conexão expirada. Gere outra solicitação no Mac.');

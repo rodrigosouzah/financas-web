@@ -1,12 +1,14 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { nativeCookieIdentity } from './native-auth';
+import {configuredEmailAuth,emailIdentity} from './email-auth';
 
 export type ChatGPTUser = {
   userId: string;
   displayName: string;
   email: string;
   fullName: string | null;
+  authProvider?: 'email'|'chatgpt'|'native';
 };
 
 const USER_ID_HEADER = "oai-authenticated-user-id";
@@ -19,11 +21,21 @@ const SIGN_IN_PATH = "/signin-with-chatgpt";
 const SIGN_OUT_PATH = "/signout-with-chatgpt";
 const CALLBACK_PATH = "/callback";
 
-export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
+export async function getBrowserIdentity():Promise<ChatGPTUser|null>{
+  const external=await emailIdentity();
+  if(external.attempted)return external.user;
+  return getOriginalChatGPTIdentity();
+}
+export async function getChatGPTUser():Promise<ChatGPTUser|null>{
+  const external=await emailIdentity();
+  if(external.attempted)return external.user;
+  return await getOriginalChatGPTIdentity()??await nativeCookieIdentity();
+}
+async function getOriginalChatGPTIdentity(): Promise<ChatGPTUser | null> {
   const requestHeaders = await headers();
   const userId = requestHeaders.get(USER_ID_HEADER);
   const email = requestHeaders.get(USER_EMAIL_HEADER);
-  if (!userId || !email) return nativeCookieIdentity();
+  if (!userId || !email) return null;
 
   const encodedFullName = requestHeaders.get(USER_FULL_NAME_HEADER);
   const fullName =
@@ -37,6 +49,7 @@ export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
     displayName: fullName ?? email,
     email,
     fullName,
+    authProvider:'chatgpt',
   };
 }
 
@@ -46,7 +59,7 @@ export async function requireChatGPTUser(
   const user = await getChatGPTUser();
   if (user) return user;
 
-  redirect(chatGPTSignInPath(returnTo));
+  redirect(configuredEmailAuth()?'/auth?next='+encodeURIComponent(safeRelativeReturnPath(returnTo)):chatGPTSignInPath(returnTo));
 }
 
 export function chatGPTSignInPath(returnTo: string): string {
