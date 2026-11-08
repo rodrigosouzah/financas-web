@@ -1,6 +1,6 @@
 # Finanças Web
 
-A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.8**.
+A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.9**.
 
 ## User features
 
@@ -53,3 +53,11 @@ Do not commit `.tools`, `.wrangler`, `.sites-runtime`, personal financial files,
 Public bank marks are stored locally with their retained catalog notices/licenses under `public/banks/`. Icons use Lucide; the app wallet artwork is retained from the existing app. The application stack includes React, Vinext, Drizzle and fflate, under their respective dependency licenses. Bank marks identify their owners and do not imply affiliation.
 
 Public source: https://github.com/rodrigosouzah/financas-web. See [RELEASING.md](RELEASING.md) for the required dual publication workflow.
+
+## Type management and dashboard charts
+
+Despesas has persistent native sort/filter controls above the table and a Personalizar manager to create, rename, recolor and delete types. Deleting a type clears only its classification, leaving expenses and original source cells intact.
+
+Gastos por tipo is2×2 with bars or a pie chart. Despesas em12meses is2×2 and shows January–December of the selected year, filtering all/one-off/fixed/installment expenses. Figures are gross scheduled expenses; future recurring payments remain forecasts. Cross-currency values use the current ECB reference, not historical exchange rates. Missing rates produce explicit partial-data notes.
+
+The standalone Saldo devedor widget is retired; its registered-debt total is included in Parcelamentos with monthly dues and a progress bar per plan. Legacy widget IDs remain decodable. Existing visible layouts gain the annual chart on render; explicitly hidden-all layouts remain empty. Visibility choices and chart preferences are stored per profile on user action.

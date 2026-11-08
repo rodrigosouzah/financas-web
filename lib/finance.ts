@@ -16,17 +16,20 @@ export interface Goal { id:string; name:string; currency:Currency; target:number
 export interface Saving { id:string; amount:number; currency:Currency; date:string; goalId:string }
 export interface Password { salt:string; digest:string; iterations:number }
 export interface ImportInfo { id:string; name:string; fingerprint:string; headers:string[] }
-export interface Profile { id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
+export interface ExpenseView {sort:'original'|'asc'|'desc';typeFilter:string}
+export interface ChartPreferences {typeChart:'bars'|'pie';annualMode:'Todas'|Mode}
+export interface Profile {expenseView?:ExpenseView;chartPreferences?:ChartPreferences;widgetCatalogVersion?:number; id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
 export interface Workspace { schemaVersion:1; profiles:Profile[]; activeId:string|null }
 export interface Rates { date:string; fetchedAt:string; perEuro:Partial<Record<Currency,number>>; source:'ECB' }
-export const VERSION = '0.3.0-web.8';
+export const VERSION = '0.3.0-web.9';
 export const normalize = (s:string) => s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 export const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export const currentMonth = () => today().slice(0,7);
 export const uid = () => crypto.randomUUID();
 export const emptyValues = ():Values => ({description:'',type:'',mode:'Avulsa',amount:'',currency:'EUR',category:'Individual',share:'0',date:'',finalDate:'',cardId:'',accountId:''});
-export const DEFAULT_WIDGETS = ['balance','income','payments','refunds','cards','debt','savings','installments','brazil','types','exchange','calendar'];
-export function newProfile(name:string):Profile { return {id:uid(),name:name.trim(),cards:[],accounts:[],people:[],entries:[],goals:[],savings:[],imports:[],types:[...TYPES],colors:{},widgets:[...DEFAULT_WIDGETS],month:currentMonth()}; }
+export const DEFAULT_WIDGETS = ['balance','income','payments','refunds','cards','savings','installments','brazil','types','exchange','annualExpenses','calendar'];
+export const ALLOWED_WIDGETS=[...DEFAULT_WIDGETS,'debt'];
+export function newProfile(name:string):Profile { return {id:uid(),name:name.trim(),cards:[],accounts:[],people:[],entries:[],goals:[],savings:[],imports:[],types:[...TYPES],colors:{},widgets:[...DEFAULT_WIDGETS],widgetCatalogVersion:2,month:currentMonth()}; }
 export function dateParts(value:string):{year:number;month:number;day:number}|null {
  let m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim()),year:number,month:number,day:number;
  if(m){ year=+m[1];month=+m[2];day=+m[3]; } else { m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value.trim());if(!m)return null;day=+m[1];month=+m[2];year=+m[3]; }
@@ -113,7 +116,7 @@ export function editValue(p:Profile,e:Entry,column:Column,value:string):Entry {
 const PALETTE=['32936F','E58B36','A875CC','D86491','4689C8','A48B6A','D87979','BA9C37','44A5A5','6D8BCE','8E83B8','71859A','68987A','BE8E66','8D9199'];
 export function typeColor(p:Profile,type:string){const key=normalize(type);if(!key)return'';if(key in p.colors)return p.colors[key];const index=TYPES.findIndex(t=>normalize(t)===key);let hash=0;for(const c of key)hash=(Math.imul(hash,31)+c.charCodeAt(0))>>>0;return PALETTE[index>=0?index:hash%PALETTE.length];}
 export function rowBackground(p:Profile,type:string){const hex=typeColor(p,type);if(!/^[\dA-F]{6}$/i.test(hex))return'#FFFFFF';const n=parseInt(hex,16);return`rgb(${[16,8,0].map(s=>Math.round(214.2+0.16*((n>>s)&255))).join(',')})`;}
-export function renameType(p:Profile,old:string,name:string,color:string){const next=name.trim();if(!next||next.length>60||/[\u0000-\u001F]/.test(next)||!normalize(next))throw new Error('Use um nome de 1 a 60 caracteres.');if(p.types.some(t=>normalize(t)!==normalize(old)&&normalize(t)===normalize(next)))throw new Error('Já existe um tipo com este nome.');const colors={...p.colors};delete colors[normalize(old)];colors[normalize(next)]=color;return{...p,types:p.types.map(t=>normalize(t)===normalize(old)?next:t),colors,entries:p.entries.map(e=>normalize(e.values.type)===normalize(old)?{...e,values:{...e.values,type:next}}:e)};}
+export function renameType(p:Profile,old:string,name:string,color:string){const next=name.trim();if(!next||next==='__personalizar'||next.length>60||/[\u0000-\u001F]/.test(next)||!normalize(next))throw new Error('Use um nome de 1 a 60 caracteres.');if(p.types.some(t=>normalize(t)!==normalize(old)&&normalize(t)===normalize(next)))throw new Error('Já existe um tipo com este nome.');const colors={...p.colors};delete colors[normalize(old)];colors[normalize(next)]=color;return{...p,types:p.types.map(t=>normalize(t)===normalize(old)?next:t),colors,expenseView:p.expenseView?{...p.expenseView,typeFilter:normalize(p.expenseView.typeFilter)===normalize(old)?next:p.expenseView.typeFilter}:undefined,entries:p.entries.map(e=>normalize(e.values.type)===normalize(old)?{...e,values:{...e.values,type:next}}:e)};}
 export function validLegacy(x:LegacyPlan):boolean {
  const integer=(n:unknown,min:number,max:number)=>Number.isSafeInteger(n)&&Number(n)>=min&&Number(n)<=max;
  return !!x&&integer(x.start,22800,26411)&&(x.final==null||integer(x.final,x.start,26411))&&integer(x.count,1,360)&&integer(x.paid,0,x.count)&&integer(x.remaining,0,x.count)&&integer(x.monthly,0,99999999999)&&integer(x.debt,0,99999999999)&&integer(x.reference,22800,26411)&&(x.creditCardId===undefined||typeof x.creditCardId==='string'&&x.creditCardId.length<=500)&&(!x.schedule||Array.isArray(x.schedule)&&x.schedule.length<=360&&x.schedule.every(q=>integer(q.month,22800,26411)&&integer(q.number,1,x.count)&&integer(q.amount,0,99999999999)));
@@ -127,7 +130,7 @@ export function validateWorkspace(input:unknown):Workspace {
  if(state.schemaVersion!==1||!Array.isArray(state.profiles)||state.profiles.length>30)fail('Formato de dados incompatível.');unique(state.profiles);
  for(const p of state.profiles){if(!text(p.name,80,true))fail('Perfil inválido.');
  for(const key of ['cards','accounts','people','entries','goals','savings','imports','types','widgets'] as const)if(!Array.isArray(p[key]))fail('Dados incompletos no perfil.');
- if(p.entries.length>10000||p.cards.length>100||p.accounts.length>100||p.people.length>100||p.goals.length>100||p.savings.length>10000||p.imports.length>1000||p.types.length>100||p.widgets.length>DEFAULT_WIDGETS.length)fail('O backup excede os limites do aplicativo.');
+ if(p.entries.length>10000||p.cards.length>100||p.accounts.length>100||p.people.length>100||p.goals.length>100||p.savings.length>10000||p.imports.length>1000||p.types.length>100||p.widgets.length>ALLOWED_WIDGETS.length)fail('O backup excede os limites do aplicativo.');
  for(const key of ['cards','accounts','people','entries','goals','savings','imports'] as const)unique(p[key]);
  if(!p.colors||Array.isArray(p.colors)||typeof p.colors!=='object'||Object.keys(p.colors).length>100||Object.entries(p.colors).some(([k,x])=>!text(k,100)||typeof x!=='string'||(x!==''&&!/^[\dA-F]{6}$/i.test(x))))fail('Cores inválidas.');
  for(const e of p.entries){if(!['expense','income'].includes(e.kind)||typeof e.posted!=='boolean'||!e.values||COLS.some(k=>!text(e.values[k]))||e.ignored!==undefined&&typeof e.ignored!=='boolean'||e.timing!==undefined&&!['date','endMinus2'].includes(e.timing)||e.personId!==undefined&&!text(e.personId,100)||e.importId!==undefined&&!text(e.importId,100)||e.raw!==undefined&&(!Array.isArray(e.raw)||e.raw.length>64||e.raw.some(v=>!text(v,10000)))||e.legacy!==undefined&&!validLegacy(e.legacy))fail('Lançamento ou histórico de parcelas inválido.');}
@@ -137,8 +140,11 @@ export function validateWorkspace(input:unknown):Workspace {
  for(const g of p.goals)if(!text(g.name,100,true)||!CURRENCIES.includes(g.currency)||!amount(g.target)||g.target<=0||!text(g.deadline)||!dateParts(g.deadline)||!text(g.createdAt)||!dateParts(g.createdAt))fail('Objetivo inválido.');
  for(const saving of p.savings)if(!amount(saving.amount)||saving.amount<=0||!CURRENCIES.includes(saving.currency)||!text(saving.date)||!dateParts(saving.date)||!text(saving.goalId,100)||saving.goalId&&!p.goals.some(g=>g.id===saving.goalId&&g.currency===saving.currency))fail('Depósito ou objetivo vinculado inválido.');
  for(const i of p.imports)if(!text(i.name,500,true)||!text(i.fingerprint,64)||!/^([a-f0-9]{64})$/.test(i.fingerprint)||!Array.isArray(i.headers)||i.headers.length>64||i.headers.some(h=>!text(h,500)))fail('Importação inválida.');
- if(p.types.some(t=>!text(t,60,true))||new Set(p.types.map(normalize)).size!==p.types.length||p.widgets.some(w=>!DEFAULT_WIDGETS.includes(w))||new Set(p.widgets).size!==p.widgets.length)fail('Tipos ou widgets inválidos.');
- if(p.widgetSizes&&(typeof p.widgetSizes!=='object'||Object.entries(p.widgetSizes).some(([k,v])=>!DEFAULT_WIDGETS.includes(k)||!['single','wide','large','1x1','2x1','2x2','1','2','big'].includes(v))))fail('Dimensão de widget inválida.');
+ if(p.types.some(t=>!text(t,60,true))||new Set(p.types.map(normalize)).size!==p.types.length||p.widgets.some(w=>!ALLOWED_WIDGETS.includes(w))||new Set(p.widgets).size!==p.widgets.length)fail('Tipos ou widgets inválidos.');
+ if(p.widgetSizes&&(typeof p.widgetSizes!=='object'||Object.entries(p.widgetSizes).some(([k,v])=>!ALLOWED_WIDGETS.includes(k)||!['single','wide','large','1x1','2x1','2x2','1','2','big'].includes(v))))fail('Dimensão de widget inválida.');
+ if(p.expenseView&&(!['original','asc','desc'].includes(p.expenseView.sort)||!text(p.expenseView.typeFilter,500)))fail('Organização de despesas inválida.');
+ if(p.chartPreferences&&(!['bars','pie'].includes(p.chartPreferences.typeChart)||!['Todas','Avulsa','Fixa','Parcelada'].includes(p.chartPreferences.annualMode)))fail('Preferências de gráfico inválidas.');
+ if(p.widgetCatalogVersion!==undefined&&(!Number.isInteger(p.widgetCatalogVersion)||p.widgetCatalogVersion<1||p.widgetCatalogVersion>2))fail('Versão de widgets inválida.');
  if(p.password&&(!Number.isInteger(p.password.iterations)||p.password.iterations<100000||p.password.iterations>2000000||!text(p.password.salt,24)||!text(p.password.digest,44)||!/^[A-Za-z0-9+/]{22}==$/.test(p.password.salt)||!/^[A-Za-z0-9+/]{43}=$/.test(p.password.digest)))fail('Proteção de perfil inválida.');
  if(!text(p.month,7)||!/^\d{4}-\d{2}$/.test(p.month)||monthIndex(p.month)===null||Number(p.month.slice(0,4))<1900||Number(p.month.slice(0,4))>2200)fail('Mês inválido.');
  }
