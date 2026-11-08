@@ -1,6 +1,6 @@
 # Finanças Web
 
-A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.6**.
+A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.7**.
 
 ## User features
 
@@ -9,6 +9,7 @@ A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the es
 - Widget organization supports direct pointer dragging of the whole card or handle (mouse, trackpad and touch), gap drop targets, edge auto-scroll, Escape cancellation, keyboard-accessible move arrows and hide controls. Grid order follows the displayed sequence.
 - Mac-style monthly payment calendar: Monday-first seven-column grid, complete month including empty days, daily/monthly totals, purchase-mode filter and day-to-expenses drilldown carrying that filter. Reference conversions are marked; unavailable rates leave original currencies separate.
 - Customizable dashboard widgets on an aligned grid: payment calendar, reimbursements by person, card bills, installments, savings, Brazil transfers, spending types, and compact FX.
+- Per-account monthly debit cards total every linked expense charge, including credit-card payments funded by the account. Income and reimbursements stay separate. Drilldown opens exactly those monthly debit rows; bank-balance cards show the same total. The balance-date cutoff remains specific to balance forecasts.
 - Bank-branded credit/debit cards. Contas lists bills paid directly from bank accounts or debit cards, with monthly amounts and a link to the canonical expense row. Credit-card purchases stay in Cartões even when they have a funding account. Bank registries, balances and cumulative projections remain accessible through Contas bancárias e saldos.
 - One editable expense table; Excel `.xlsx`/`.xlsm` and clipboard import with mapping/review, multi-cell selection, bulk replacement, type colors, filtering/sorting, deletion confirmations and Excel export.
 - Monthly installment calculations in integer cents. The last installment absorbs rounding. Viewing a future month never confirms a payment or silently reduces a reported bank debt.
