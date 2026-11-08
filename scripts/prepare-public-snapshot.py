@@ -21,6 +21,6 @@ for item in git('ls-tree','-r','-z',commit).split(b'\0'):
  except UnicodeDecodeError:binary=True;content=''
  files.append({'path':path,'mode':mode,'sha':sha,'binary':binary,'content':base64.b64encode(data).decode() if binary else content})
 output=Path(args.output);output.mkdir(parents=True,exist_ok=True)
-payload=json.dumps({'commit':commit,'tree':tree,'files':files},ensure_ascii=True,separators=(',',':'));chunks=[payload[i:i+45000] for i in range(0,len(payload),45000)]
+payload=json.dumps({'commit':commit,'tree':tree,'files':files},ensure_ascii=True,separators=(',',':'));chunks=[payload[i:i+20000] for i in range(0,len(payload),20000)]
 for i,chunk in enumerate(chunks):(output/f'chunk-{i:04}.txt').write_text(chunk)
 report={'commit':commit,'tree':tree,'files':len(files),'binaryFiles':sum(f['binary'] for f in files),'chunks':len(chunks)};(output/'manifest.json').write_text(json.dumps(report));print(json.dumps(report))
