@@ -21,15 +21,15 @@ export interface ChartPreferences {typeChart:'bars'|'pie';annualMode:'Todas'|Mod
 export interface Profile {expenseView?:ExpenseView;chartPreferences?:ChartPreferences;widgetCatalogVersion?:number; id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
 export interface Workspace { schemaVersion:1; profiles:Profile[]; activeId:string|null }
 export interface Rates { date:string; fetchedAt:string; perEuro:Partial<Record<Currency,number>>; source:'ECB' }
-export const VERSION = '0.3.0-web.9';
+export const VERSION = '0.3.0-web.11';
 export const normalize = (s:string) => s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 export const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export const currentMonth = () => today().slice(0,7);
 export const uid = () => crypto.randomUUID();
 export const emptyValues = ():Values => ({description:'',type:'',mode:'Avulsa',amount:'',currency:'EUR',category:'Individual',share:'0',date:'',finalDate:'',cardId:'',accountId:''});
-export const DEFAULT_WIDGETS = ['balance','income','payments','refunds','cards','savings','installments','brazil','types','exchange','annualExpenses','calendar'];
+export const DEFAULT_WIDGETS = ['balance','income','payments','refunds','cards','accounts','savings','installments','brazil','types','exchange','annualExpenses','calendar'];
 export const ALLOWED_WIDGETS=[...DEFAULT_WIDGETS,'debt'];
-export function newProfile(name:string):Profile { return {id:uid(),name:name.trim(),cards:[],accounts:[],people:[],entries:[],goals:[],savings:[],imports:[],types:[...TYPES],colors:{},widgets:[...DEFAULT_WIDGETS],widgetCatalogVersion:2,month:currentMonth()}; }
+export function newProfile(name:string):Profile { return {id:uid(),name:name.trim(),cards:[],accounts:[],people:[],entries:[],goals:[],savings:[],imports:[],types:[...TYPES],colors:{},widgets:[...DEFAULT_WIDGETS],widgetCatalogVersion:3,month:currentMonth()}; }
 export function dateParts(value:string):{year:number;month:number;day:number}|null {
  let m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim()),year:number,month:number,day:number;
  if(m){ year=+m[1];month=+m[2];day=+m[3]; } else { m=/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(value.trim());if(!m)return null;day=+m[1];month=+m[2];year=+m[3]; }
@@ -144,7 +144,7 @@ export function validateWorkspace(input:unknown):Workspace {
  if(p.widgetSizes&&(typeof p.widgetSizes!=='object'||Object.entries(p.widgetSizes).some(([k,v])=>!ALLOWED_WIDGETS.includes(k)||!['single','wide','large','1x1','2x1','2x2','1','2','big'].includes(v))))fail('Dimensão de widget inválida.');
  if(p.expenseView&&(!['original','asc','desc'].includes(p.expenseView.sort)||!text(p.expenseView.typeFilter,500)))fail('Organização de despesas inválida.');
  if(p.chartPreferences&&(!['bars','pie'].includes(p.chartPreferences.typeChart)||!['Todas','Avulsa','Fixa','Parcelada'].includes(p.chartPreferences.annualMode)))fail('Preferências de gráfico inválidas.');
- if(p.widgetCatalogVersion!==undefined&&(!Number.isInteger(p.widgetCatalogVersion)||p.widgetCatalogVersion<1||p.widgetCatalogVersion>2))fail('Versão de widgets inválida.');
+ if(p.widgetCatalogVersion!==undefined&&(!Number.isInteger(p.widgetCatalogVersion)||p.widgetCatalogVersion<1||p.widgetCatalogVersion>3))fail('Versão de widgets inválida.');
  if(p.password&&(!Number.isInteger(p.password.iterations)||p.password.iterations<100000||p.password.iterations>2000000||!text(p.password.salt,24)||!text(p.password.digest,44)||!/^[A-Za-z0-9+/]{22}==$/.test(p.password.salt)||!/^[A-Za-z0-9+/]{43}=$/.test(p.password.digest)))fail('Proteção de perfil inválida.');
  if(!text(p.month,7)||!/^\d{4}-\d{2}$/.test(p.month)||monthIndex(p.month)===null||Number(p.month.slice(0,4))<1900||Number(p.month.slice(0,4))>2200)fail('Mês inválido.');
  }

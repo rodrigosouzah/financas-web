@@ -1,6 +1,6 @@
 {
   "name": "financas-web",
-  "version": "0.3.0-web.9",
+  "version": "0.3.0-web.11",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
