@@ -11,7 +11,7 @@ export interface LegacyPlan { start:number; final?:number|null; count:number; pa
 export interface Entry { id:string; kind:'expense'|'income'; values:Values; posted:boolean; ignored?:boolean; timing?:'date'|'endMinus2'; personId?:string; importId?:string; raw?:string[]; legacy?:LegacyPlan }
 export interface BankCard { id:string; name:string; lastFour:string; kind:'Crédito'|'Débito'; currency:Currency; limit:number; day:number }
 export interface BankAccount { id:string; name:string; lastFour?:string; currency:Currency; balance:number; balanceDate:string }
-export interface Person { id:string; name:string; active:boolean }
+export interface Person { id:string; name:string; active:boolean; reimbursementAccounts?:Partial<Record<Currency,string>> }
 export interface Goal { id:string; name:string; currency:Currency; target:number; deadline:string; createdAt:string }
 export interface Saving { id:string; amount:number; currency:Currency; date:string; goalId:string }
 export interface Password { salt:string; digest:string; iterations:number }
@@ -19,7 +19,7 @@ export interface ImportInfo { id:string; name:string; fingerprint:string; header
 export interface Profile { id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
 export interface Workspace { schemaVersion:1; profiles:Profile[]; activeId:string|null }
 export interface Rates { date:string; fetchedAt:string; perEuro:Partial<Record<Currency,number>>; source:'ECB' }
-export const VERSION = '0.3.0-web.7';
+export const VERSION = '0.3.0-web.8';
 export const normalize = (s:string) => s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 export const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export const currentMonth = () => today().slice(0,7);
@@ -133,7 +133,7 @@ export function validateWorkspace(input:unknown):Workspace {
  for(const e of p.entries){if(!['expense','income'].includes(e.kind)||typeof e.posted!=='boolean'||!e.values||COLS.some(k=>!text(e.values[k]))||e.ignored!==undefined&&typeof e.ignored!=='boolean'||e.timing!==undefined&&!['date','endMinus2'].includes(e.timing)||e.personId!==undefined&&!text(e.personId,100)||e.importId!==undefined&&!text(e.importId,100)||e.raw!==undefined&&(!Array.isArray(e.raw)||e.raw.length>64||e.raw.some(v=>!text(v,10000)))||e.legacy!==undefined&&!validLegacy(e.legacy))fail('Lançamento ou histórico de parcelas inválido.');}
  for(const c of p.cards)if(!text(c.name,80,true)||!['Crédito','Débito'].includes(c.kind)||!CURRENCIES.includes(c.currency)||!amount(c.limit)||!Number.isInteger(c.day)||c.day<1||c.day>31||!/^\d{4}$/.test(c.lastFour))fail('Cartão inválido.');
  for(const a of p.accounts)if(!text(a.name,80,true)||!CURRENCIES.includes(a.currency)||!amount(a.balance,true)||!text(a.balanceDate)||!dateParts(a.balanceDate)||a.lastFour!==undefined&&a.lastFour!==''&&!/^\d{4}$/.test(a.lastFour))fail('Conta inválida.');
- for(const person of p.people)if(!text(person.name,80,true)||typeof person.active!=='boolean')fail('Pessoa inválida.');
+ for(const person of p.people)if(!text(person.name,80,true)||typeof person.active!=='boolean'||person.reimbursementAccounts&&(typeof person.reimbursementAccounts!=='object'||Array.isArray(person.reimbursementAccounts)||Object.entries(person.reimbursementAccounts).some(([c,id])=>!CURRENCIES.includes(c as Currency)||!text(id,100))))fail('Pessoa ou destino de reembolso inválido.');
  for(const g of p.goals)if(!text(g.name,100,true)||!CURRENCIES.includes(g.currency)||!amount(g.target)||g.target<=0||!text(g.deadline)||!dateParts(g.deadline)||!text(g.createdAt)||!dateParts(g.createdAt))fail('Objetivo inválido.');
  for(const saving of p.savings)if(!amount(saving.amount)||saving.amount<=0||!CURRENCIES.includes(saving.currency)||!text(saving.date)||!dateParts(saving.date)||!text(saving.goalId,100)||saving.goalId&&!p.goals.some(g=>g.id===saving.goalId&&g.currency===saving.currency))fail('Depósito ou objetivo vinculado inválido.');
  for(const i of p.imports)if(!text(i.name,500,true)||!text(i.fingerprint,64)||!/^([a-f0-9]{64})$/.test(i.fingerprint)||!Array.isArray(i.headers)||i.headers.length>64||i.headers.some(h=>!text(h,500)))fail('Importação inválida.');
