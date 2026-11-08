@@ -4,3 +4,9 @@ export function confirmationInput(values:{get:(key:string)=>unknown}){
  return{token,type};
 }
 export function confirmationError(code:string|undefined){return code==='otp_expired'?'link-expired':code==='over_request_rate_limit'?'verification-rate-limit':'verification-unavailable';}
+
+export function confirmationOrigin(requestURL:string){
+ const url=new URL(requestURL);
+ return url.protocol==='http:'&&['127.0.0.1','localhost'].includes(url.hostname)?url.origin:'https://financas-rodrigo-web.jammypark15.chatgpt.site';
+}
+export function trustedConfirmationOrigin(origin:string|null,requestURL:string){return origin===confirmationOrigin(requestURL);}

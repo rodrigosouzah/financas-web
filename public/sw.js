@@ -1,4 +1,4 @@
-const BUILD='0.3.0-web.20';
+const BUILD='0.3.0-web.21';
 const CACHE='financas-shell-'+BUILD;
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(['/manifest.webmanifest','/icons/icon-192.png','/icons/icon-512.png'])));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('financas-shell-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
