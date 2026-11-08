@@ -1,6 +1,6 @@
 # Finanças Web
 
-A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.13**.
+A Portuguese personal-finance web app/PWA for Mac and Windows, preserving the established Finanças cards and widgets design. Version **0.3.0-web.14**.
 
 ## User features
 

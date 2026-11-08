@@ -32,6 +32,29 @@ export function useWorkspace(){
  const change=useCallback((update:Workspace|((previous:Workspace)=>Workspace))=>{
   if(!owner.current)return;const next=validateWorkspace(typeof update==='function'?update(latest.current):update);latest.current=next;setState(next);sequence.current++;dirty.current=true;setStatus(navigator.onLine?'Salvando':'Modo offline');void cache().catch(e=>setError(e.message));if(timer.current)clearTimeout(timer.current);timer.current=setTimeout(()=>void pump(),600);
  },[cache,pump]);
+ // Pull remote changes only while clean. A delayed response cannot replace a
+ // local edit made during the request; revision conflicts keep both copies.
+ useEffect(()=>{
+  if(!ready||!identity)return;
+  let stopped=false,reading=false;
+  async function refresh(){
+   if(stopped||reading||document.hidden||!navigator.onLine||dirty.current||busy.current||blocked.current||!owner.current)return;
+   reading=true;const at=sequence.current,who=owner.current.userId;
+   try{
+    const response=await fetch('/api/workspace',{cache:'no-store'});
+    if(!response.ok)return;
+    const remote=await response.json() as {userId:string;revision:number;state:unknown};
+    if(stopped||dirty.current||busy.current||sequence.current!==at||owner.current?.userId!==who)return;
+    if(remote.userId!==who){setError('A conta conectada mudou. Entre novamente antes de sincronizar.');return;}
+    if(remote.revision<=revision.current)return;
+    const next=remote.state?validateWorkspace(remote.state):EMPTY;
+    latest.current=next;revision.current=remote.revision;setState(next);setStatus('Salvo na nuvem');setError('');await cache();
+   }catch{/* A transient read failure must never replace the local workspace. */}finally{reading=false;}
+  }
+  const pull=()=>void refresh();window.addEventListener('focus',pull);window.addEventListener('online',pull);document.addEventListener('visibilitychange',pull);
+  const interval=setInterval(pull,30_000);
+  return()=>{stopped=true;clearInterval(interval);window.removeEventListener('focus',pull);window.removeEventListener('online',pull);document.removeEventListener('visibilitychange',pull);};
+ },[ready,identity,cache]);
  const loadCloud=useCallback(async()=>{download('Financas-backup-local-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(latest.current,null,2));const response=await fetch('/api/workspace',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível carregar a nuvem.');const result=await response.json() as {revision:number;state:unknown};const next=result.state?validateWorkspace(result.state):EMPTY;latest.current=next;revision.current=result.revision;dirty.current=false;blocked.current=false;setConflict(false);setState(next);setError('');setStatus('Salvo na nuvem');await cache();},[cache]);
  return{state,change,ready,identity,status,error,conflict,loadCloud,flush:pump,clearError:()=>setError('')};
 }

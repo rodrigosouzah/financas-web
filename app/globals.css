@@ -52,3 +52,5 @@
  .display{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
  footer{padding-bottom:calc(75px + env(safe-area-inset-bottom,0px))}
 }
+
+.native-connect{min-height:100dvh;display:grid;place-items:center;padding:24px}.native-connect>.widget{width:min(100%,560px);gap:20px;padding:32px}.native-connect h1{font-size:24px;letter-spacing:-.5px}.native-connect p{font-size:14px;line-height:1.6}.native-connect strong{font-variant-numeric:tabular-nums;letter-spacing:2px}.native-connect a{font-size:13px}

@@ -5,7 +5,7 @@ import { and,eq } from 'drizzle-orm';
 import { validateWorkspace } from '../../../lib/finance';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'no-store'};
-export async function GET(){const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre na sua conta para acessar os dados.'},{status:401,headers});const [row]=await getDb().select().from(workspaces).where(eq(workspaces.userId,user.userId)).limit(1);return Response.json({revision:row?.revision??0,state:row?JSON.parse(row.payload):null},{headers});}
+export async function GET(){const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre na sua conta para acessar os dados.'},{status:401,headers});const [row]=await getDb().select().from(workspaces).where(eq(workspaces.userId,user.userId)).limit(1);return Response.json({userId:user.userId,revision:row?.revision??0,state:row?JSON.parse(row.payload):null},{headers});}
 export async function PUT(request:Request){
  const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre na sua conta para salvar.'},{status:401,headers});
  if(request.headers.get('X-Financas-Owner')!==user.userId)return Response.json({error:'A conta conectada mudou. Exporte seu backup local e entre novamente antes de sincronizar.'},{status:403,headers});
