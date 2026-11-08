@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {newProfile,emptyValues,pendingSummary,postPending,charges,cardSummary,accountForecast,type Entry} from '../lib/finance.ts';
+import {moveWidget} from '../lib/widgets.ts';
+test('reviewed imports update monthly totals, card bills, reimbursements and account forecast once',()=>{
+ const p=newProfile('In-memory audit');p.month='2026-11';p.cards=[{id:'c',name:'Test bank',lastFour:'1234',currency:'EUR',kind:'Crédito',limit:100000,day:5}];p.accounts=[{id:'a',name:'Test account',currency:'EUR',balance:100000,balanceDate:'2026-10-31'}];p.people=[{id:'person',name:'Shared person',active:true}];
+ const row:Entry={id:'source-row',kind:'expense',posted:false,personId:'person',importId:'batch',raw:['original source retained'],values:{...emptyValues(),description:'Imported purchase',amount:'120,01',mode:'Parcelada',date:'05/11/2026',finalDate:'05/01/2027',cardId:'c',accountId:'a',category:'Casal',share:'50'}};
+ p.entries=[row,{...row,id:'incomplete',values:{...row.values,amount:''}},{...row,id:'ignored',ignored:true}];
+ assert.deepEqual(pendingSummary(p),{total:2,ready:1,invalid:1});assert.equal(charges(p).length,0);assert.equal(cardSummary(p,p.cards[0]).due,0);
+ const saved=postPending(p);const monthly=charges(saved);assert.equal(monthly.length,1);assert.equal(monthly[0].amount,4000);assert.equal(Math.round(monthly[0].amount*monthly[0].share/10000),2000);assert.equal(cardSummary(saved,p.cards[0]).due,4000);assert.equal(cardSummary(saved,p.cards[0]).used,12001);assert.equal(accountForecast(saved,p.accounts[0])?.balance,96000);
+ assert.equal(charges(saved,'2027-01')[0].amount,4001);assert.equal(charges(saved,'2027-02').length,0);assert.equal(saved.entries[0].id,'source-row');assert.deepEqual(saved.entries[0].raw,row.raw);assert.equal(saved.entries[1].posted,false);assert.equal(saved.entries[2].posted,false);assert.deepEqual(postPending(saved),saved);assert.equal(p.entries[0].posted,false);
+});
+test('moving in either direction lands at target position with no lost or duplicated IDs',()=>{
+ const order=['balance','cards','savings','calendar'];assert.deepEqual(moveWidget(order,'balance','calendar'),['cards','savings','calendar','balance']);assert.deepEqual(moveWidget(order,'calendar','balance'),['calendar','balance','cards','savings']);assert.deepEqual(moveWidget(order,'cards','savings'),['balance','savings','cards','calendar']);assert.deepEqual(moveWidget(order,'unknown','cards'),order);
+ for(const from of order)for(const to of order){const moved=moveWidget(order,from,to);assert.equal(moved.indexOf(from),order.indexOf(to));assert.equal(new Set(moved).size,order.length);assert.deepEqual(moved.filter(x=>x!==from),order.filter(x=>x!==from));}assert.deepEqual(order,['balance','cards','savings','calendar']);
+});
+test('pointer drop targets accept card bodies, gaps and different widget sizes',async()=>{
+ const {widgetDropTarget}=await import('../lib/widgets.ts');const boxes=[{id:'a',left:0,right:100,top:0,bottom:100},{id:'b',left:110,right:210,top:0,bottom:100},{id:'large',left:0,right:210,top:110,bottom:320}];assert.equal(widgetDropTarget(boxes,50,50),'a');assert.equal(widgetDropTarget(boxes,108,50),'b');assert.equal(widgetDropTarget(boxes,105,230),'large');assert.equal(widgetDropTarget(boxes,50,108),'large');assert.equal(widgetDropTarget([],0,0),null);
+});
+test('Contas includes direct account bills and debit purchases, excluding credit purchases and income',async()=>{
+ const {directAccountBills}=await import('../lib/direct-bills.ts');const {newProfile,emptyValues}=await import('../lib/finance.ts');const p=newProfile('In-memory direct bill test');p.month='2026-12';p.accounts=[{id:'a',name:'Test bank',currency:'EUR',balance:100000,balanceDate:'2026-11-30'}];p.cards=[{id:'credit',name:'Test bank',kind:'Crédito',lastFour:'1111',currency:'EUR',limit:100000,day:5},{id:'debit',name:'Test bank',kind:'Débito',lastFour:'2222',currency:'EUR',limit:0,day:1}];
+ const row=(id:string,cardId='',accountId='a')=>({id,kind:'expense' as const,posted:true,values:{...emptyValues(),description:'Direct bill model test',amount:'100,00',date:'09/12/2026',mode:'Fixa',accountId,cardId}});p.entries=[row('direct'),row('debit','debit'),row('credit','credit'),{...row('income'),kind:'income'},{...row('pending'),posted:false},{...row('ignored'),ignored:true}];const result=directAccountBills(p);assert.deepEqual(result.map(r=>r.entry.id),['direct','debit']);assert.equal(result.reduce((s,r)=>s+(r.charge?.amount??0),0),20000);assert.equal(directAccountBills({...p,month:'2026-11'}).every(r=>r.charge===null),true);const before=JSON.stringify(p);directAccountBills(p);assert.equal(JSON.stringify(p),before);
+});

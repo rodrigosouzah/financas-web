@@ -1,0 +1,3 @@
+import {charges,validateEntry,type Profile} from './finance.ts';
+/** A funding account on a credit-card purchase does not make it a direct debit. */
+export function directAccountBills(p:Profile){const due=new Map(charges(p).filter(c=>c.entry.kind==='expense').map(c=>[c.entry.id,c]));return p.entries.filter(e=>{if(!e.posted||e.ignored||e.kind!=='expense')return false;const card=p.cards.find(c=>c.id===e.values.cardId);return e.values.cardId?card?.kind==='Débito':!!e.values.accountId;}).map(entry=>({entry,account:p.accounts.find(a=>a.id===entry.values.accountId),card:p.cards.find(c=>c.id===entry.values.cardId),charge:due.get(entry.id)??null,errors:validateEntry(p,entry)}));}
