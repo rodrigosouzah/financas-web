@@ -41,3 +41,14 @@
   .type-pie-layout{grid-template-columns:minmax(80px,.8fr) minmax(125px,1.2fr)}
 }
 @media(pointer:coarse){.bank-card .card-actions .icon{opacity:1}.row-delete{opacity:1;visibility:visible;min-width:36px;min-height:36px}}
+
+/* Phone navigation: one compact row, icons only; names remain accessible. */
+@media(max-width:600px){
+ .app-header nav{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+ .app-header nav .nav-label,.guide-button>span{display:none}
+ .app-header nav button{height:46px;min-height:46px;padding:8px 2px}
+ .app-header nav button svg{width:22px;height:22px}
+ .app-header nav .emoji-icon{font-size:23px;line-height:26px}
+ .display{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+ footer{padding-bottom:calc(75px + env(safe-area-inset-bottom,0px))}
+}
