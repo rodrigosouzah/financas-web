@@ -20,7 +20,7 @@ export function useWorkspace(){
    if(!user.signedIn){setStatus('Entre para começar');setReady(true);return;}
    const who={userId:user.userId,name:user.name};owner.current=who;setIdentity(who);localStorage.setItem('financas:last-user',JSON.stringify(who));
    const cached=await readLocal<CachedWorkspace>('user:'+who.userId).catch(()=>null);
-   const remoteResponse=await fetch('/api/workspace',{cache:'no-store'});if(!remoteResponse.ok)throw new Error('A nuvem está indisponível.');const remote=await remoteResponse.json() as {revision:number;state:unknown};
+   const remoteResponse=await fetch('/api/workspace',{cache:'no-store'});if(!remoteResponse.ok)throw new Error('A nuvem está indisponível.');const remote=await remoteResponse.json() as {userId:string;revision:number;state:unknown};if(remote.userId!==who.userId)throw new Error('A conta conectada mudou. Entre novamente antes de sincronizar.');
    if(!mounted)return;let chosen:Workspace=remote.state?validateWorkspace(remote.state):EMPTY;
    if(cached?.dirty){chosen=validateWorkspace(cached.state);dirty.current=true;revision.current=cached.revision;if(remote.revision!==cached.revision){blocked.current=true;setConflict(true);setError('Há alterações em outro dispositivo. Exporte seu backup local antes de carregar a nuvem.');}}
    else revision.current=remote.revision;
@@ -55,6 +55,6 @@ export function useWorkspace(){
   const interval=setInterval(pull,30_000);
   return()=>{stopped=true;clearInterval(interval);window.removeEventListener('focus',pull);window.removeEventListener('online',pull);document.removeEventListener('visibilitychange',pull);};
  },[ready,identity,cache]);
- const loadCloud=useCallback(async()=>{download('Financas-backup-local-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(latest.current,null,2));const response=await fetch('/api/workspace',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível carregar a nuvem.');const result=await response.json() as {revision:number;state:unknown};const next=result.state?validateWorkspace(result.state):EMPTY;latest.current=next;revision.current=result.revision;dirty.current=false;blocked.current=false;setConflict(false);setState(next);setError('');setStatus('Salvo na nuvem');await cache();},[cache]);
+ const loadCloud=useCallback(async()=>{const at=sequence.current,who=owner.current?.userId;download('Financas-backup-local-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(latest.current,null,2));const response=await fetch('/api/workspace',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível carregar a nuvem.');const result=await response.json() as {userId:string;revision:number;state:unknown};if(!who||result.userId!==who||owner.current?.userId!==who)throw new Error('A conta conectada mudou. Entre novamente antes de sincronizar.');if(sequence.current!==at||busy.current)throw new Error('Há novas alterações locais. Salve um novo backup antes de carregar a nuvem.');const next=result.state?validateWorkspace(result.state):EMPTY;latest.current=next;revision.current=result.revision;dirty.current=false;blocked.current=false;setConflict(false);setState(next);setError('');setStatus('Salvo na nuvem');await cache();},[cache]);
  return{state,change,ready,identity,status,error,conflict,loadCloud,flush:pump,clearError:()=>setError('')};
 }
