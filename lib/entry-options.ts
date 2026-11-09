@@ -11,7 +11,7 @@ export function entryOptions(p:Profile,key:EntryChoiceColumn,current?:string):En
  else if(key==='currency')options=CURRENCIES.map(value=>({value,label:value}));
  else if(key==='category')options=[...new Set(['Individual','Casal',...p.people.map(x=>x.name)])].map(value=>({value,label:value}));
  else if(key==='cardId')options=[{value:'',label:'Selecione'},...p.cards.map(c=>({value:c.id,label:`${c.name} • ${c.lastFour} • ${c.currency}`}))];
- else options=[{value:'',label:'Selecione'},...p.accounts.map(a=>({value:a.id,label:`${a.name} • ${a.currency}`}))];
+ else options=[{value:'',label:'Selecione'},...p.accounts.map(a=>({value:a.id,label:`${a.name}${a.lastFour?' • '+a.lastFour:''} • ${a.currency}`}))];
  if(current===''&&!options.some(o=>o.value===''))options.unshift({value:'',label:'Selecione'});
  if(current&&!options.some(o=>o.value===current))options.push({value:current,label:current.startsWith('unlinked:')?current.slice(9):key==='cardId'?'Cartão excluído / não cadastrado':key==='accountId'?'Conta excluída / não cadastrada':current,missing:true});
  return options;
