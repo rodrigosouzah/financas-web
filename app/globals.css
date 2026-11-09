@@ -87,3 +87,12 @@
 @media(max-width:360px){.header-main>.brand{gap:6px}.header-main>.brand img{width:26px;height:26px}.header-main>.brand>span{font-size:17px}}
 
 .chat-drop-active { outline:2px dashed #007aff; outline-offset:6px; background:#f2f7ff; border-radius:14px; }
+
+.admin-counts,.admin-user-actions {display:flex;flex-wrap:wrap;gap:10px;margin:16px 0;}
+.admin-user-list {max-height:48vh;overflow-y:auto;margin:16px 0;}
+.admin-user-card {display:flex;justify-content:space-between;gap:20px;padding:20px;margin-bottom:12px;border:1px solid #ececf0;border-radius:18px;background:#fff;}
+.admin-user-card h3,.admin-user-card p {margin:0 0 8px;overflow-wrap:anywhere;}
+.admin-user-actions {align-content:center;justify-content:flex-end;max-width:390px;}
+.admin-history {display:grid;gap:6px;padding:14px 0;border-bottom:1px solid #ececf0;}
+.admin-confirm {border:1px solid #bbd6f8;}
+@media(max-width:600px){.admin-user-card{flex-direction:column;gap:8px;}.admin-user-actions{justify-content:flex-start;max-width:none;}.admin-panel .toolbar-actions{flex-wrap:wrap;}.admin-counts .button{flex:1 1 42%;}}

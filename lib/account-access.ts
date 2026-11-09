@@ -1,6 +1,6 @@
 export interface AccessIdentity {userId:string;email:string;displayName:string;authProvider?:string}
 export interface AccessDB {prepare(sql:string):{run():Promise<unknown>;bind(...args:unknown[]):{run():Promise<unknown>;first<T>():Promise<T|null>;all<T>():Promise<{results:T[]}>}}}
-export type AccessStatus='pending'|'approved'|'rejected';
+export type AccessStatus='pending'|'approved'|'rejected'|'blocked';
 export async function initializeAccess(db:AccessDB){await db.prepare('CREATE TABLE IF NOT EXISTS finance_access (user_id TEXT PRIMARY KEY, email TEXT NOT NULL, name TEXT NOT NULL, status TEXT NOT NULL, requested_at TEXT NOT NULL, reviewed_at TEXT, reviewed_by TEXT)').run();}
 export async function accessStatus(db:AccessDB,user:AccessIdentity,isOwner:boolean):Promise<AccessStatus>{
  await initializeAccess(db);

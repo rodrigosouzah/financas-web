@@ -27,3 +27,5 @@ export const aiUsage = sqliteTable('finance_ai_usage', {
 export const superuserRoles=sqliteTable('finance_roles',{userId:text('user_id').primaryKey().notNull(),role:text('role').notNull(),bootstrapKey:text('bootstrap_key').unique()});
 
 export const accountAccess=sqliteTable('finance_access',{userId:text('user_id').primaryKey().notNull(),email:text('email').notNull(),name:text('name').notNull(),status:text('status').notNull(),requestedAt:text('requested_at').notNull(),reviewedAt:text('reviewed_at'),reviewedBy:text('reviewed_by')});
+
+export const adminAudit=sqliteTable('finance_admin_audit',{id:integer('id').primaryKey({autoIncrement:true}),actorId:text('actor_id').notNull(),targetId:text('target_id').notNull(),action:text('action').notNull(),previousValue:text('previous_value').notNull(),nextValue:text('next_value').notNull(),createdAt:text('created_at').notNull()});

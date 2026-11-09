@@ -14,6 +14,7 @@ export function AssistantChat({profile,owner,onReview,superuser=false,onManage,o
  const [management,setManagement]=useState<ManagementDraft|null>(null),[confirmation,setConfirmation]=useState(''),[applied,setApplied]=useState(false),[totals,setTotals]=useState<ReturnType<typeof managementTotals>|null>(null);
  const [image,setImage]=useState<string|null>(null),[imageName,setImageName]=useState(''),[statement,setStatement]=useState<ReturnType<typeof validateStatementTable>|null>(null),[dragging,setDragging]=useState(false);const attachment=useRef<HTMLInputElement>(null);
  async function attach(file:File){if(!superuser||busy)return;setError('');if(file.type.startsWith('image/')){if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>4*1024*1024){setError('Use PNG, JPEG ou WebP de até 4 MB.');return;}const reader=new FileReader();reader.onload=()=>{setImage(String(reader.result));setImageName(file.name);setStatement(null);};reader.onerror=()=>setError('Não foi possível ler a imagem.');reader.readAsDataURL(file);}else{if(!/\.(xlsx|csv|tsv)$/i.test(file.name)){setError('Use Excel .xlsx, CSV, TSV ou imagem PNG/JPEG/WebP.');return;}await onFile(file);}}
+ useEffect(()=>{if(!superuser){setManagement(null);setImage(null);setImageName('');setStatement(null);}},[superuser]);
  const table=superuser&&!image&&isPastedTable(input);
  const list=useRef<HTMLDivElement>(null),controller=useRef<AbortController|null>(null);
  useEffect(()=>()=>controller.current?.abort(),[]);
