@@ -25,3 +25,5 @@ export const aiUsage = sqliteTable('finance_ai_usage', {
 
 // Server-only authorization registry; idempotently initialized by the role resolver.
 export const superuserRoles=sqliteTable('finance_roles',{userId:text('user_id').primaryKey().notNull(),role:text('role').notNull(),bootstrapKey:text('bootstrap_key').unique()});
+
+export const accountAccess=sqliteTable('finance_access',{userId:text('user_id').primaryKey().notNull(),email:text('email').notNull(),name:text('name').notNull(),status:text('status').notNull(),requestedAt:text('requested_at').notNull(),reviewedAt:text('reviewed_at'),reviewedBy:text('reviewed_by')});

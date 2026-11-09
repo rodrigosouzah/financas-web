@@ -1,3 +1,4 @@
+import {approvalDenied} from '../../account-access';
 import {getBrowserIdentity} from '../../chatgpt-auth';
 import {nativeIdentity} from '../../native-auth';
 import {getDb} from '../../../db';
@@ -9,12 +10,14 @@ const headers={'Cache-Control':'no-store'};
 const bearer=(r:Request)=>r.headers.get('Authorization')?.replace(/^Bearer /,'')??null;
 export async function GET(request:Request){
  const user=await nativeIdentity(bearer(request));
+ if(user){const denied=await approvalDenied(user);if(denied)return denied;}
  return user?Response.json({userId:user.userId,name:user.displayName},{headers}):Response.json({error:'Autorize este Mac no navegador.'},{status:401,headers});
 }
 export async function POST(request:Request){
  // Approval requires verified browser sign-in, never an existing device cookie.
  if(request.headers.get('Origin')!==new URL(request.url).origin||!request.headers.get('Content-Type')?.includes('application/json'))return Response.json({error:'Origem inválida.'},{status:403,headers});
  const user=await getBrowserIdentity();if(!user)return Response.json({error:'Entre novamente no navegador.'},{status:401,headers});
+ const denied=await approvalDenied(user);if(denied)return denied;
  try{
   const raw=await request.text();if(raw.length>1000)throw new Error('Solicitação inválida.');
   const body:unknown=JSON.parse(raw);if(!validApproval(body))throw new Error('Conexão expirada. Gere outra solicitação no Mac.');

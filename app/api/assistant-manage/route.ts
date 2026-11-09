@@ -1,3 +1,4 @@
+import {approvalDenied} from '../../account-access';
 import {env} from 'cloudflare:workers';
 import {getChatGPTUser} from '../../chatgpt-auth';
 import {isSuperuser} from '../../superuser';
@@ -8,6 +9,7 @@ export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
 export async function POST(request:Request){
  const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre na sua conta.'},{status:401,headers});
+ const denied=await approvalDenied(user);if(denied)return denied;
  if(request.headers.get('Origin')!==confirmationOrigin(request.url)||request.headers.get('X-Financas-Owner')!==user.userId||!await isSuperuser(user))return Response.json({error:'Permissão de superusuário necessária.'},{status:403,headers});
  if(!request.headers.get('Content-Type')?.includes('application/json'))return Response.json({error:'Formato inválido.'},{status:415,headers});
  try{

@@ -1,3 +1,4 @@
+import {approvalDenied} from '../../account-access';
 import {statementSchema,statementInstructions,validateStatementImage,validateStatementTable} from '../../../lib/statement-image';
 import {financialAnswer} from '../../../lib/assistant-queries';
 import {GET as getRates} from '../rates/route';
@@ -18,6 +19,7 @@ export const dynamic='force-dynamic';
 const headers={'Cache-Control':'private, no-store'};
 export async function POST(request:Request){
  const user=await getChatGPTUser();if(!user)return Response.json({error:'Entre na sua conta.'},{status:401,headers});
+ const denied=await approvalDenied(user);if(denied)return denied;
  if(request.headers.get('Origin')!==confirmationOrigin(request.url)||request.headers.get('X-Financas-Owner')!==user.userId)return Response.json({error:'A conta conectada mudou. Entre novamente.'},{status:403,headers});
  if(!request.headers.get('Content-Type')?.includes('application/json'))return Response.json({error:'Formato inválido.'},{status:415,headers});
  const config=env as unknown as Record<string,string|undefined>;
