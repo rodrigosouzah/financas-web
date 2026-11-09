@@ -21,7 +21,7 @@ export interface ChartPreferences {typeChart:'bars'|'pie';annualMode:'Todas'|Mod
 export interface Profile {expenseView?:ExpenseView;chartPreferences?:ChartPreferences;widgetCatalogVersion?:number; id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
 export interface Workspace { schemaVersion:1; profiles:Profile[]; activeId:string|null }
 export interface Rates { date:string; fetchedAt:string; perEuro:Partial<Record<Currency,number>>; source:'ECB' }
-export const VERSION = '0.3.0-web.29';
+export const VERSION = '0.3.0-web.30';
 export const normalize = (s:string) => s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 export const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export const currentMonth = () => today().slice(0,7);

@@ -96,3 +96,8 @@
 .admin-history {display:grid;gap:6px;padding:14px 0;border-bottom:1px solid #ececf0;}
 .admin-confirm {border:1px solid #bbd6f8;}
 @media(max-width:600px){.admin-user-card{flex-direction:column;gap:8px;}.admin-user-actions{justify-content:flex-start;max-width:none;}.admin-panel .toolbar-actions{flex-wrap:wrap;}.admin-counts .button{flex:1 1 42%;}}
+
+.profile-control{display:flex;align-items:center;gap:4px;}
+.owner-admin-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:6px 9px;border-radius:8px;color:var(--blue);font-size:12px;white-space:nowrap;flex-shrink:0;}
+.owner-admin-button:hover{background:#eaf3ff;}
+@media(max-width:600px){.owner-admin-button{width:36px;height:40px;min-height:40px;padding:0;}.owner-admin-button>span{display:none;}.header-right>.profile-control{width:100%;}.header-right .profile-button{min-width:0;flex:1;}}
