@@ -85,3 +85,5 @@
  .assistant-modal .chat-messages{max-height:38dvh}
 }
 @media(max-width:360px){.header-main>.brand{gap:6px}.header-main>.brand img{width:26px;height:26px}.header-main>.brand>span{font-size:17px}}
+
+.chat-drop-active { outline:2px dashed #007aff; outline-offset:6px; background:#f2f7ff; border-radius:14px; }

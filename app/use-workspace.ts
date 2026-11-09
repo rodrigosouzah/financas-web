@@ -4,8 +4,8 @@ import { type Workspace,validateWorkspace } from '../lib/finance';
 import { type CachedWorkspace,readLocal,writeLocal,download } from '../lib/browser-storage';
 const EMPTY:Workspace={schemaVersion:1,profiles:[],activeId:null};
 export function useWorkspace(){
- const [state,setState]=useState<Workspace>(EMPTY),[ready,setReady]=useState(false),[identity,setIdentity]=useState<{userId:string;name:string;authProvider?:'email'|'chatgpt'|'native'}|null>(null),[signInPath,setSignInPath]=useState('/signin-with-chatgpt?return_to=/'),[status,setStatus]=useState('Carregando'),[error,setError]=useState(''),[conflict,setConflict]=useState(false);
- const latest=useRef(state),owner=useRef<{userId:string;name:string;authProvider?:'email'|'chatgpt'|'native'}|null>(null),revision=useRef(0),sequence=useRef(0),dirty=useRef(false),busy=useRef(false),blocked=useRef(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
+ const [state,setState]=useState<Workspace>(EMPTY),[ready,setReady]=useState(false),[identity,setIdentity]=useState<{userId:string;name:string;superuser?:boolean;authProvider?:'email'|'chatgpt'|'native'}|null>(null),[signInPath,setSignInPath]=useState('/signin-with-chatgpt?return_to=/'),[status,setStatus]=useState('Carregando'),[error,setError]=useState(''),[conflict,setConflict]=useState(false);
+ const latest=useRef(state),owner=useRef<{userId:string;name:string;superuser?:boolean;authProvider?:'email'|'chatgpt'|'native'}|null>(null),revision=useRef(0),sequence=useRef(0),dirty=useRef(false),busy=useRef(false),blocked=useRef(false),timer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const cache=useCallback(async()=>{if(owner.current)await writeLocal('user:'+owner.current.userId,{state:latest.current,revision:revision.current,dirty:dirty.current,name:owner.current.name} satisfies CachedWorkspace);},[]);
  const pump=useCallback(async()=>{
   if(!owner.current||!dirty.current||busy.current||blocked.current||!navigator.onLine)return;
@@ -16,9 +16,9 @@ export function useWorkspace(){
  },[cache]);
  useEffect(()=>{let mounted=true;
   async function start(){try{
-   const response=await fetch('/api/session',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível verificar a conta.');const user=await response.json() as {signedIn:boolean;userId:string;name:string;authProvider?:'email'|'chatgpt'|'native';signInPath?:string};if(!mounted)return;setSignInPath(user.signInPath==='/auth'?'/auth':'/signin-with-chatgpt?return_to=/');
+   const response=await fetch('/api/session',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível verificar a conta.');const user=await response.json() as {signedIn:boolean;userId:string;name:string;superuser?:boolean;authProvider?:'email'|'chatgpt'|'native';signInPath?:string};if(!mounted)return;setSignInPath(user.signInPath==='/auth'?'/auth':'/signin-with-chatgpt?return_to=/');
    if(!user.signedIn){setStatus('Entre para começar');setReady(true);return;}
-   const who={userId:user.userId,name:user.name,authProvider:user.authProvider};owner.current=who;setIdentity(who);localStorage.setItem('financas:last-user',JSON.stringify(who));
+   const who={userId:user.userId,name:user.name,authProvider:user.authProvider,superuser:user.superuser};owner.current=who;setIdentity(who);localStorage.setItem('financas:last-user',JSON.stringify(who));
    const cached=await readLocal<CachedWorkspace>('user:'+who.userId).catch(()=>null);
    const remoteResponse=await fetch('/api/workspace',{cache:'no-store'});if(!remoteResponse.ok)throw new Error('A nuvem está indisponível.');const remote=await remoteResponse.json() as {userId:string;revision:number;state:unknown};if(remote.userId!==who.userId)throw new Error('A conta conectada mudou. Entre novamente antes de sincronizar.');
    if(!mounted)return;let chosen:Workspace=remote.state?validateWorkspace(remote.state):EMPTY;
@@ -56,5 +56,13 @@ export function useWorkspace(){
   return()=>{stopped=true;clearInterval(interval);window.removeEventListener('focus',pull);window.removeEventListener('online',pull);document.removeEventListener('visibilitychange',pull);};
  },[ready,identity,cache]);
  const loadCloud=useCallback(async()=>{const at=sequence.current,who=owner.current?.userId;download('Financas-backup-local-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(latest.current,null,2));const response=await fetch('/api/workspace',{cache:'no-store'});if(!response.ok)throw new Error('Não foi possível carregar a nuvem.');const result=await response.json() as {userId:string;revision:number;state:unknown};if(!who||result.userId!==who||owner.current?.userId!==who)throw new Error('A conta conectada mudou. Entre novamente antes de sincronizar.');if(sequence.current!==at||busy.current)throw new Error('Há novas alterações locais. Salve um novo backup antes de carregar a nuvem.');const next=result.state?validateWorkspace(result.state):EMPTY;latest.current=next;revision.current=result.revision;dirty.current=false;blocked.current=false;setConflict(false);setState(next);setError('');setStatus('Salvo na nuvem');await cache();},[cache]);
- return{state,change,ready,identity,signInPath,status,error,conflict,loadCloud,flush:pump,clearError:()=>setError('')};
+ const manage=useCallback(async(profileId:string,draft:unknown,confirmation:string)=>{
+  await pump();if(!owner.current||dirty.current||busy.current||blocked.current||!navigator.onLine)throw Error('Aguarde a sincronização com a nuvem antes de confirmar.');
+  const who=owner.current.userId,at=sequence.current;busy.current=true;
+  try{const response=await fetch('/api/assistant-manage',{method:'POST',headers:{'Content-Type':'application/json','X-Financas-Owner':who},body:JSON.stringify({profileId,draft,revision:revision.current,confirm:true,confirmation})});const result=await response.json() as {error?:string;state?:unknown;revision:number;userId?:string;backup?:Workspace;totals?:unknown};if(!response.ok)throw Error(result.error||'Não foi possível aplicar.');
+   if(owner.current?.userId!==who||result.userId&&result.userId!==who)throw Error('A conta mudou. Entre novamente.');
+   if(result.state){if(sequence.current!==at){blocked.current=true;setConflict(true);throw Error('Há novas alterações locais. Carregue a nuvem após exportar seu backup.');}latest.current=validateWorkspace(result.state);revision.current=result.revision;setState(latest.current);setStatus('Salvo na nuvem');await cache();}return result;
+  }finally{busy.current=false;}
+ },[pump,cache]);
+ return{manage,state,change,ready,identity,signInPath,status,error,conflict,loadCloud,flush:pump,clearError:()=>setError('')};
 }

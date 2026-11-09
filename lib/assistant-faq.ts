@@ -18,3 +18,5 @@ export function answerFAQ(message:string){
  if(/^(registre|adicion|cadastre|lance|gastei|recebi|comprei|crie)/.test(n))return null;
  return ASSISTANT_FAQ.find(f=>normalize(f.question)===n||f.terms.some(t=>n===normalize(t)||n.startsWith(normalize(t)+'porfavor')||n==='porfavor'+normalize(t)))??null;
 }
+
+export const SUPERUSER_HELP='No modo Superusuário posso preparar novos registros, propor alterações e exclusões, limpar grupos de dados com confirmação, gerar backup JSON e consultar totais por cartão, conta, moeda e Tipo. Alterações exigem revisão; apagar grupos exige digitar APAGAR. O acesso é limitado ao seu próprio espaço. Não faço pagamentos bancários nem altero credenciais ou permissões.';

@@ -22,3 +22,6 @@ export const aiUsage = sqliteTable('finance_ai_usage', {
  day:text('day').notNull(),
  count:integer('count').notNull(),
 }, t=>[primaryKey({columns:[t.scope,t.day]})]);
+
+// Server-only authorization registry; idempotently initialized by the role resolver.
+export const superuserRoles=sqliteTable('finance_roles',{userId:text('user_id').primaryKey().notNull(),role:text('role').notNull(),bootstrapKey:text('bootstrap_key').unique()});
