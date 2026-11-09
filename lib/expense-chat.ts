@@ -1,3 +1,4 @@
+import {entryOptions,canonicalOption} from './entry-options.ts';
 import {type Profile,type Values,type Entry,emptyValues,parseMoney,inputMoney,dateParts,displayDate,monthIndex,normalize,validateEntry} from './finance.ts';
 export interface ChatMessage{role:'user'|'assistant';content:string}
 export interface ExpenseProposal{description:string|null;type:string|null;mode:'Avulsa'|'Fixa'|'Parcelada'|null;amount:string|null;amountBasis:'total'|'monthly'|null;currency:'EUR'|'BRL'|'USD'|null;category:string|null;share:string|null;date:string|null;finalDate:string|null;installmentCount:number|null;cardId:string|null;accountId:string|null}
@@ -6,7 +7,7 @@ export function chatMessages(value:unknown):ChatMessage[]{
  if(!Array.isArray(value)||value.length<1||value.length>12)throw new Error('Inicie uma nova conversa.');
  let size=0;return value.map(m=>{if(!m||!['user','assistant'].includes(m.role)||typeof m.content!=='string'||!m.content.trim()||m.content.length>2000)throw new Error('Use mensagens de até 2.000 caracteres.');size+=m.content.length;if(size>10000)throw new Error('Conversa muito longa. Inicie outra.');return{role:m.role,content:m.content};});
 }
-export function chatContext(p:Profile){return{types:p.types.slice(0,80),cards:p.cards.slice(0,80).map(c=>({id:c.id,name:c.name,lastFour:c.lastFour,currency:c.currency})),accounts:p.accounts.slice(0,80).map(a=>({id:a.id,name:a.name,lastFour:a.lastFour??'',currency:a.currency})),people:p.people.filter(x=>x.active).slice(0,80).map(x=>({name:x.name})),categories:['Individual','Casal',...p.people.filter(x=>x.active).map(x=>x.name)]};}
+export function chatContext(p:Profile){return{types:entryOptions(p,'type').filter(x=>x.value).map(x=>x.value),cards:p.cards.map(c=>({id:c.id,name:c.name,lastFour:c.lastFour,currency:c.currency})),accounts:p.accounts.map(a=>({id:a.id,name:a.name,lastFour:a.lastFour??'',currency:a.currency})),people:p.people.map(x=>({name:x.name,active:x.active})),categories:entryOptions(p,'category').map(x=>x.value)};}
 export function prepareExpense(p:Profile,raw:unknown):{values:Values|null;issues:string[]}{
  if(!raw||typeof raw!=='object')return{values:null,issues:[]};
  const r=raw as Record<string,unknown>,v=emptyValues(),issues:string[]=[];
@@ -15,7 +16,8 @@ export function prepareExpense(p:Profile,raw:unknown):{values:Values|null;issues
  v.mode=typeof r.mode==='string'?r.mode:'';v.currency=typeof r.currency==='string'?r.currency:'';
  v.category=typeof r.category==='string'?r.category:'Individual';
  v.share=typeof r.share==='string'?r.share:normalize(v.category)==='individual'?'0':normalize(v.category)==='casal'?'50':'100';
- if(v.type&&!p.types.includes(v.type))v.type='';
+ if(v.type){const type=canonicalOption(p,'type',v.type);if(type!==null)v.type=type;else{v.type='';issues.push('Escolha um tipo cadastrado em Despesas.');}}
+ const category=canonicalOption(p,'category',v.category);if(category!==null)v.category=category;else{v.category='';issues.push('Escolha uma categoria cadastrada em Despesas.');}
  const card=p.cards.find(c=>c.id===v.cardId),account=p.accounts.find(a=>a.id===v.accountId);
  if(v.cardId&&!card){v.cardId='';issues.push('Escolha um cartão cadastrado.');}
  if(v.accountId&&!account){v.accountId='';issues.push('Escolha uma conta cadastrada.');}
