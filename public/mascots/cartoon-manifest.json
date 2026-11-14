@@ -2,50 +2,538 @@
   {
     "path": "public/mascots/walk-rodrigo-0.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7619047619047619,
+      "frames": [
+        {
+          "left": 108,
+          "top": 1,
+          "width": 183,
+          "height": 319,
+          "headX": 192.14167984976785
+        },
+        {
+          "left": 108,
+          "top": 6,
+          "width": 179,
+          "height": 314,
+          "headX": 191.86806219938234
+        },
+        {
+          "left": 111,
+          "top": 11,
+          "width": 170,
+          "height": 309,
+          "headX": 191.65883489546553
+        },
+        {
+          "left": 112,
+          "top": 0,
+          "width": 174,
+          "height": 320,
+          "headX": 192.26089169270668
+        },
+        {
+          "left": 115,
+          "top": 2,
+          "width": 179,
+          "height": 318,
+          "headX": 191.99032724786105
+        },
+        {
+          "left": 131,
+          "top": 8,
+          "width": 146,
+          "height": 312,
+          "headX": 192.1633519730625
+        },
+        {
+          "left": 144,
+          "top": 9,
+          "width": 120,
+          "height": 311,
+          "headX": 191.9126916332738
+        },
+        {
+          "left": 110,
+          "top": 5,
+          "width": 184,
+          "height": 315,
+          "headX": 191.9845223778304
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-rodrigo-1.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7710843373493976,
+      "frames": [
+        {
+          "left": 101,
+          "top": 2,
+          "width": 171,
+          "height": 318,
+          "headX": 191.75036299004503
+        },
+        {
+          "left": 128,
+          "top": 3,
+          "width": 126,
+          "height": 317,
+          "headX": 191.7936956434786
+        },
+        {
+          "left": 123,
+          "top": 0,
+          "width": 135,
+          "height": 320,
+          "headX": 192.16009730426907
+        },
+        {
+          "left": 115,
+          "top": 0,
+          "width": 156,
+          "height": 320,
+          "headX": 191.91322826569842
+        },
+        {
+          "left": 87,
+          "top": 0,
+          "width": 192,
+          "height": 320,
+          "headX": 192.15187667794578
+        },
+        {
+          "left": 116,
+          "top": 1,
+          "width": 150,
+          "height": 319,
+          "headX": 191.7579341547987
+        },
+        {
+          "left": 113,
+          "top": 1,
+          "width": 156,
+          "height": 319,
+          "headX": 191.55746278348744
+        },
+        {
+          "left": 97,
+          "top": 2,
+          "width": 194,
+          "height": 318,
+          "headX": 192.33606553939427
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-rodrigo-2.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7655502392344498,
+      "frames": [
+        {
+          "left": 99,
+          "top": 2,
+          "width": 175,
+          "height": 318,
+          "headX": 191.85475420871205
+        },
+        {
+          "left": 116,
+          "top": 1,
+          "width": 145,
+          "height": 319,
+          "headX": 192.15596781145064
+        },
+        {
+          "left": 115,
+          "top": 2,
+          "width": 155,
+          "height": 318,
+          "headX": 192.09657424296722
+        },
+        {
+          "left": 101,
+          "top": 1,
+          "width": 178,
+          "height": 319,
+          "headX": 192.47274704929129
+        },
+        {
+          "left": 95,
+          "top": 0,
+          "width": 194,
+          "height": 320,
+          "headX": 192.2871293224958
+        },
+        {
+          "left": 111,
+          "top": 0,
+          "width": 164,
+          "height": 320,
+          "headX": 192.15046821766452
+        },
+        {
+          "left": 115,
+          "top": 3,
+          "width": 160,
+          "height": 317,
+          "headX": 192.3576929430344
+        },
+        {
+          "left": 101,
+          "top": 0,
+          "width": 177,
+          "height": 320,
+          "headX": 192.06352699406216
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-rodrigo-3.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7582938388625592,
+      "frames": [
+        {
+          "left": 110,
+          "top": 0,
+          "width": 168,
+          "height": 320,
+          "headX": 192.1881539544545
+        },
+        {
+          "left": 124,
+          "top": 1,
+          "width": 135,
+          "height": 319,
+          "headX": 192.01353637266538
+        },
+        {
+          "left": 136,
+          "top": 2,
+          "width": 121,
+          "height": 318,
+          "headX": 191.62093849544925
+        },
+        {
+          "left": 121,
+          "top": 5,
+          "width": 148,
+          "height": 315,
+          "headX": 192.19665013961196
+        },
+        {
+          "left": 94,
+          "top": 2,
+          "width": 190,
+          "height": 318,
+          "headX": 192.33937237701292
+        },
+        {
+          "left": 115,
+          "top": 2,
+          "width": 152,
+          "height": 318,
+          "headX": 191.75443828076132
+        },
+        {
+          "left": 130,
+          "top": 2,
+          "width": 148,
+          "height": 318,
+          "headX": 191.76550934988987
+        },
+        {
+          "left": 109,
+          "top": 2,
+          "width": 170,
+          "height": 318,
+          "headX": 191.97898354488092
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-victoria-0.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7239819004524887,
+      "frames": [
+        {
+          "left": 25,
+          "top": 6,
+          "width": 245,
+          "height": 314,
+          "headX": 192.290893500139
+        },
+        {
+          "left": 28,
+          "top": 6,
+          "width": 244,
+          "height": 314,
+          "headX": 192.09959543769472
+        },
+        {
+          "left": 119,
+          "top": 7,
+          "width": 151,
+          "height": 313,
+          "headX": 191.5672814795658
+        },
+        {
+          "left": 29,
+          "top": 6,
+          "width": 248,
+          "height": 314,
+          "headX": 192.16576685861946
+        },
+        {
+          "left": 26,
+          "top": 0,
+          "width": 321,
+          "height": 320,
+          "headX": 191.5107588724411
+        },
+        {
+          "left": 25,
+          "top": 0,
+          "width": 242,
+          "height": 320,
+          "headX": 192.09281116349848
+        },
+        {
+          "left": 120,
+          "top": 3,
+          "width": 151,
+          "height": 317,
+          "headX": 192.15501865454797
+        },
+        {
+          "left": 30,
+          "top": 0,
+          "width": 250,
+          "height": 320,
+          "headX": 191.80316770508023
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-victoria-1.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7529411764705882,
+      "frames": [
+        {
+          "left": 96,
+          "top": 2,
+          "width": 161,
+          "height": 318,
+          "headX": 191.7520769517348
+        },
+        {
+          "left": 109,
+          "top": 2,
+          "width": 147,
+          "height": 318,
+          "headX": 192.48278974469275
+        },
+        {
+          "left": 111,
+          "top": 2,
+          "width": 145,
+          "height": 318,
+          "headX": 191.80789567530286
+        },
+        {
+          "left": 116,
+          "top": 2,
+          "width": 142,
+          "height": 318,
+          "headX": 191.63993784594902
+        },
+        {
+          "left": 96,
+          "top": 1,
+          "width": 166,
+          "height": 319,
+          "headX": 192.39956130160243
+        },
+        {
+          "left": 112,
+          "top": 0,
+          "width": 147,
+          "height": 320,
+          "headX": 191.81725249491177
+        },
+        {
+          "left": 113,
+          "top": 2,
+          "width": 146,
+          "height": 318,
+          "headX": 192.32398981178335
+        },
+        {
+          "left": 108,
+          "top": 1,
+          "width": 152,
+          "height": 319,
+          "headX": 192.43950563502227
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-victoria-2.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7529411764705882,
+      "frames": [
+        {
+          "left": 105,
+          "top": 4,
+          "width": 166,
+          "height": 316,
+          "headX": 192.10964630370205
+        },
+        {
+          "left": 115,
+          "top": 5,
+          "width": 158,
+          "height": 315,
+          "headX": 192.4333374195961
+        },
+        {
+          "left": 117,
+          "top": 3,
+          "width": 145,
+          "height": 317,
+          "headX": 192.33387520281434
+        },
+        {
+          "left": 109,
+          "top": 6,
+          "width": 155,
+          "height": 314,
+          "headX": 192.1800018943722
+        },
+        {
+          "left": 100,
+          "top": 2,
+          "width": 179,
+          "height": 318,
+          "headX": 192.45305046641374
+        },
+        {
+          "left": 113,
+          "top": 3,
+          "width": 150,
+          "height": 317,
+          "headX": 192.1904226332681
+        },
+        {
+          "left": 127,
+          "top": 0,
+          "width": 130,
+          "height": 320,
+          "headX": 191.50319350374355
+        },
+        {
+          "left": 94,
+          "top": 2,
+          "width": 167,
+          "height": 318,
+          "headX": 191.58360693631133
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/walk-victoria-3.webp",
     "frames": 8,
-    "width": 256,
-    "height": 320
+    "width": 384,
+    "height": 320,
+    "registration": {
+      "uniformScale": 0.7407407407407407,
+      "frames": [
+        {
+          "left": 106,
+          "top": 2,
+          "width": 175,
+          "height": 318,
+          "headX": 191.908746469164
+        },
+        {
+          "left": 117,
+          "top": 0,
+          "width": 149,
+          "height": 320,
+          "headX": 191.85854524821633
+        },
+        {
+          "left": 117,
+          "top": 2,
+          "width": 151,
+          "height": 318,
+          "headX": 191.85076959685637
+        },
+        {
+          "left": 102,
+          "top": 4,
+          "width": 166,
+          "height": 316,
+          "headX": 191.51233147344277
+        },
+        {
+          "left": 107,
+          "top": 1,
+          "width": 167,
+          "height": 319,
+          "headX": 192.06504197179697
+        },
+        {
+          "left": 118,
+          "top": 2,
+          "width": 149,
+          "height": 318,
+          "headX": 191.713038067139
+        },
+        {
+          "left": 119,
+          "top": 1,
+          "width": 149,
+          "height": 319,
+          "headX": 192.0062888828371
+        },
+        {
+          "left": 106,
+          "top": 1,
+          "width": 167,
+          "height": 319,
+          "headX": 192.46837021696587
+        }
+      ]
+    }
   },
   {
     "path": "public/mascots/fall-rodrigo-0.webp",
