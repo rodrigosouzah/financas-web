@@ -1,0 +1,86 @@
+[
+  {
+    "path": "public/mascots/walk-rodrigo-0.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-rodrigo-1.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-rodrigo-2.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-rodrigo-3.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-victoria-0.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-victoria-1.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-victoria-2.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/walk-victoria-3.webp",
+    "frames": 8,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/fall-rodrigo-0.webp",
+    "frames": 8,
+    "width": 512,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/fall-victoria-0.webp",
+    "frames": 8,
+    "width": 512,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/idle-rodrigo.webp",
+    "frames": 4,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/reaction-rodrigo.webp",
+    "frames": 4,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/idle-victoria.webp",
+    "frames": 4,
+    "width": 256,
+    "height": 320
+  },
+  {
+    "path": "public/mascots/reaction-victoria.webp",
+    "frames": 4,
+    "width": 256,
+    "height": 320
+  }
+]
