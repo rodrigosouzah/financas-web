@@ -2,17 +2,17 @@ export type MascotAction='idle'|'walk'|'run'|'look'|'wave'|'fall'|'celebrate'|'s
 export interface CompanionFrame{x:number;action:MascotAction;actionTime:number;direction:1|-1;bubble:boolean;hidden:boolean;speed:number;walkPhase:number;phaseSpeed:number;costume?:boolean}
 /** Actor can fully leave the viewport without enlarging document scroll bounds. */
 export function companionFrame(time:number,width:number,bodyWidth:number,stage:number,character:'rodrigo'|'victoria'='rodrigo'):CompanionFrame{
- const cycle=Math.floor(Math.max(0,time)/46),t=((time%46)+46)%46,right=width+bodyWidth,left=-bodyWidth-24,stopRight=character==='victoria'&&stage===1?(width-bodyWidth)/2:Math.max(12,width-bodyWidth-24),stopLeft=character==='victoria'&&stage===1?(width-bodyWidth)/2:Math.min(28,Math.max(0,width-bodyWidth));
+ const cycle=Math.floor(Math.max(0,time)/46),t=((time%46)+46)%46,right=width+bodyWidth,left=-bodyWidth-24,stopRight=Math.max(0,width-bodyWidth-20),stopLeft=stopRight;
  const leftScene=visitAction(cycle*2,character,stage),rightScene=visitAction(cycle*2+1,character,stage);
  const displacement=(action:MascotAction)=>['sled','carry'].includes(action)?Math.min((bodyWidth<=88?138:175)*.8,Math.max(0,(width-(action==='sled'?340:180))/2)):0;
- const endLeft=stopLeft+displacement(leftScene),endRight=stopRight-displacement(rightScene);
+ const endLeft=stopLeft-displacement(leftScene),endRight=stopRight-displacement(rightScene);
  const costume=stage<2&&character==='rodrigo'&&(t>=23?rightScene:leftScene)==='costume';
  const base={costume,x:right,action:'idle' as MascotAction,actionTime:0,direction:-1 as 1|-1,bubble:false,hidden:false,speed:0,walkPhase:0,phaseSpeed:0};
  const travel=(a:number,b:number,start:number,duration:number,action:'walk'|'run')=>{const seconds=action==='run'?Math.min(duration,Math.max(2.4,Math.abs(b-a)/200)):duration;return{...base,...walkTravel(a,b,t-start,seconds,bodyWidth<=88?138:175),action,actionTime:t-start,direction:(b>a?1:-1) as 1|-1,hidden:action==='run'&&t-start>=seconds};};
- if(t<1)return{...base,x:left,hidden:true};
- if(t<4)return travel(left,stopLeft,1,3,'walk');
- if(t<6)return{...base,x:stopLeft,action:'turn',actionTime:t-4,direction:1};
- if(t<8)return{...base,...walkTravel(stopLeft,endLeft,t-6,2,bodyWidth<=88?138:175),action:stage<2?leftScene:cycle%2?'stretch':'wave',actionTime:t-6,direction:1};
+ if(t<1)return{...base,x:right,hidden:true};
+ if(t<4)return travel(right,stopLeft,1,3,'walk');
+ if(t<6)return{...base,x:stopLeft,action:'turn',actionTime:t-4,direction:-1};
+ if(t<8)return{...base,...walkTravel(stopLeft,endLeft,t-6,2,bodyWidth<=88?138:175),action:stage<2?leftScene:cycle%2?'stretch':'wave',actionTime:t-6,direction:displacement(leftScene)>0?-1:1};
  if(t<16)return{...base,x:endLeft,bubble:true,direction:1};
  if(t<23)return travel(endLeft,right,16,7,'run');
  if(t<26)return{...base,x:right,hidden:true};

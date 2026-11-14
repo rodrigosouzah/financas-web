@@ -46,6 +46,6 @@ test('HYROX sled and farmer carry travel gently along the floor and settle witho
  const start=companionFrame(32,width,body,1,'victoria'),middle=companionFrame(33,width,body,1,'victoria'),end=companionFrame(34,width,body,1,'victoria');
  assert.equal(start.action,'sled');assert.ok(middle.x<=start.x);assert.ok(end.x<=middle.x);if(width>340)assert.ok(end.x<start.x);
  assert.ok(Math.abs(companionFrame(34-.00001,width,body,1,'victoria').x-end.x)<.01);
- const carryStart=companionFrame(52,width,body,1,'victoria'),carryEnd=companionFrame(54,width,body,1,'victoria');assert.equal(carryStart.action,'carry');assert.ok(carryEnd.x>carryStart.x);assert.ok(carryEnd.x+body<=width);
+ const carryStart=companionFrame(52,width,body,1,'victoria'),carryEnd=companionFrame(54,width,body,1,'victoria');assert.equal(carryStart.action,'carry');assert.ok(carryEnd.x<carryStart.x);assert.ok(carryEnd.x+body<=width);
  }
 });

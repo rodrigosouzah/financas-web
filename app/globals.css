@@ -169,3 +169,13 @@
 @media(max-width:600px){.mascot-test-panel{max-height:calc(100dvh - 202px)}}
 
 .mascot-test-panel>.mascot-test-outfits{display:flex;gap:6px;margin-bottom:8px}.mascot-test-outfits .button{flex:1;min-height:30px;font-size:11px}
+
+/* HQ speech balloon: an unclipped tail with a scrollable content pane. */
+.mascot-companion .mascot-bubble{border:2px solid #454549;border-radius:24px 26px 22px 25px;box-shadow:3px 4px 0 #45454918;overflow:visible;padding:0;background:#fff}
+.mascot-bubble-content{padding:18px;max-height:min(400px,calc(100dvh - 245px));overflow-y:auto;border-radius:22px}
+.mascot-companion .mascot-bubble:after{bottom:-11px;width:18px;height:18px;border-right:2px solid #454549;border-bottom:2px solid #454549;background:#fff;z-index:1}
+.mascot-bubble-content>strong{padding-right:20px}.mascot-bubble-content>div{display:flex;justify-content:space-between;gap:12px;margin-top:12px}.mascot-bubble-content .mascot-close-bubble{z-index:2}
+@media(max-width:600px){.mascot-bubble-content{max-height:calc(100dvh - 220px)}}
+.mascot-bubble>.mascot-bubble-content{display:block;margin-top:0}
+
+@media(max-width:600px){:root{--phone-nav-height:calc(61px + env(safe-area-inset-bottom,0px))}.app-header nav{height:var(--phone-nav-height)}.mascot-companion{bottom:var(--phone-nav-height)!important}.mascot-bubble-content{max-height:calc(100dvh - 220px - var(--phone-nav-height))}}
