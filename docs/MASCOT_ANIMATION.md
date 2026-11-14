@@ -1,3 +1,13 @@
+# Web39 — complete 2D character drawings
+
+The new first-two-outfit gesture library uses48 complete character drawings per gesture at24FPS (two seconds). Full-character image-generated cels are cropped, uniformly scaled, registered and packed; no body-part articulation, face patches,3D rigs or optical-flow interpolation. Victoria first outfit uses the user-approved opaque beige short-sleeve T-shirt. Where denser sheets fail, two24-cel sheets form the48-drawing sequence with whole-cell assembly only.
+
+Canvas2D targets24drawing updates per second while whole-character travel uses display-refresh updates. Actors walk looking ahead, stop, then turn toward the viewer; each visit has one scene, with complete offscreen exits between visits. Costume visits use costume walking/running/turning assets throughout, so wardrobe changes happen offscreen. Generated walk/run cycles and gestures are actual drawings; numerical frame/alpha/count checks do not prove cinematic naturalness, which remains user acceptance. Upper financial outfits keep their existing simpler approved2D art, as requested.
+
+A bounded six-image cache and readiness guard preserve the beginning of each gesture on slow loading. Hidden tabs/forms, hover/focus and device reduced-motion preferences pause or stop the appropriate animation. Artwork does not modify financial records or make runtime AI requests. Dialogues, reviewed chat actions and role checks retain the existing app behavior.
+
+Earlier research and limitations, retained for context:
+
 # Mascot walk-cycle research and next-test changes
 
 The approved character design stays unchanged. This pass adjusts registration and motion mechanics, without replacing the drawings, cloning the app, or changing financial records.
@@ -42,3 +52,5 @@ At the user's request, the earlier geometric 3D model is available again as an e
 The normal character now uses articulated 3D body movement with the exact approved illustrated head artwork mapped to an alpha-contoured, curved portrait surface. Each outfit has normal and skeptical portraits from the existing approved atlases; no face is repainted or wrapped around a sphere. The former placeholder head meshes are detached so they neither render nor affect floor bounds. Expression changes swap the active portrait mesh; detached portrait variants do not inflate bounds. Body skin colour is sampled from the approved portrait, clothing receives a fine fabric map, and lighting/materials use a warmer, softer finish with no hard cel outlines.
 
 This is a 2.5D illustrated-head/3D-body hybrid, not a fully sculpted portrait or film-quality Pixar model. The illustrated face preserves the approved identity but has image-based expressions, not full 3D eyelid/mouth deformation or lip-sync. The requested visual direction is feature-animation-inspired; final appearance approval remains the user's. All original images remain unchanged. The former test-mode option now shows/hides movement controls; the textured hybrid is the normal renderer. Original full-body illustration is the loading/error fallback. A canonical three-second recovery is retimed to the six-second procedural fall rig, while manual six-second tests retain their native timing. No financial records or permissions are changed.
+
+Victoria first-outfit dance shares her complete48-drawing celebration motion after repeated image-generation failures for a separate dance page. Each clip still contains48distinct complete character drawings; no frame duplication/interpolation is used to reach that number. This shared motion is explicit in the manifest and must be disclosed, rather than claimed as a separately authored dance.

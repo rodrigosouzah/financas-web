@@ -164,3 +164,8 @@
 .mascot-portrait-fallback .mascot-sprite{width:100%;height:100%;aspect-ratio:auto}
 .chat-mascot-portrait .mascot-portrait-fallback{width:58px;height:90px}.mascot-expense-reaction .mascot-portrait-fallback{width:72px;height:112px}
 @media(max-width:600px){.mascot-live-body .mascot-portrait-fallback{width:88px;height:138px}}
+
+.mascot-test-panel{max-height:calc(100dvh - 240px);overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:600px){.mascot-test-panel{max-height:calc(100dvh - 202px)}}
+
+.mascot-test-panel>.mascot-test-outfits{display:flex;gap:6px;margin-bottom:8px}.mascot-test-outfits .button{flex:1;min-height:30px;font-size:11px}
