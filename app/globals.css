@@ -129,3 +129,22 @@
 @media(prefers-reduced-motion:reduce){.mascot-companion{transition:none}.mascot-body,.mascot-bubble,.mascot-annoyed{animation:none!important}}
 
 .mascot-refund-reminder{border-top:1px solid #eeeef1;margin-top:10px;padding-top:5px}.mascot-refund-reminder .text-button{margin-top:5px}.mascot-bubble{max-height:min(440px,calc(100dvh - 220px));overflow-y:auto}
+
+/* True geometric 3D actor: projected floor is exactly canvas/window bottom. */
+.mascot-companion{bottom:0!important;transition:none!important;height:175px}
+.mascot-live-body{position:absolute;bottom:0;left:0;width:112px;height:175px;animation:none!important;transform:none!important}
+.mascot-companion .mascot-tools{position:absolute;bottom:100%;left:0;width:112px;z-index:1}
+.mascot-companion .mascot-bubble{bottom:calc(100% + 35px)}
+.mascot-3d-host{display:block;width:100%;height:100%;position:relative;pointer-events:none;overflow:hidden}
+.mascot-3d-host canvas{display:block;width:100%;height:100%;pointer-events:none}
+.mascot-3d-unavailable{position:absolute;bottom:10px;left:0;font-size:10px;line-height:1.4;background:white;border-radius:8px;padding:5px;color:#777}
+.mascot-expense-reaction .mascot-3d-host{width:72px;height:112px}.mascot-expense-reaction .mascot-annoyed{animation:none}
+@media(max-width:600px){.mascot-companion{height:138px}.mascot-live-body{width:88px;height:138px}.mascot-companion .mascot-tools{width:88px}.mascot-companion .mascot-bubble{max-height:calc(100dvh - 190px)}}
+
+.mascot-stage{position:fixed;inset:0;z-index:35;overflow:clip;pointer-events:none;contain:layout paint}
+.mascot-live-body>.mascot-3d-host{position:absolute;bottom:0;left:-112px;width:336px;height:175px;overflow:visible}
+@media(max-width:600px){.mascot-live-body>.mascot-3d-host{left:-88px;width:264px;height:138px}}
+
+.mascot-unavailable{display:block;position:relative}.mascot-unavailable small{position:absolute;bottom:4px;left:0;right:0;font-size:10px;color:#777;background:#fff;border-radius:6px}
+
+.chat-mascot-portrait{display:block;width:58px;height:90px;flex:0 0 58px}.chat-mascot-portrait .mascot-sprite{width:58px}
