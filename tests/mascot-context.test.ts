@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {pageReaction} from '../lib/mascot-context.ts';
+import {MASCOT_CLIPS} from '../lib/mascot-clip-data.ts';
+test('page reactions use available full-character gestures and distinct context without financial writes',()=>{for(const character of ['rodrigo','victoria'] as const)for(const page of ['home','cards','accounts','expenses','income','savings']){const r=pageReaction(page,false,character);assert.ok(r.phrase.toLowerCase().includes(character==='victoria'?'diva':'chefe')||page==='savings');for(const stage of [0,1])assert.ok(MASCOT_CLIPS[`${character}-${stage}-${r.action}`]);}assert.equal(pageReaction('expenses',false,'rodrigo').action,'no');assert.equal(pageReaction('income',false,'victoria').action,'celebrate');assert.match(pageReaction('expenses',true,'victoria').phrase,/Pix/);});

@@ -1,3 +1,4 @@
+import {MASCOT_CLIPS} from '../lib/mascot-clip-data.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -49,3 +50,5 @@ test('HYROX sled and farmer carry travel gently along the floor and settle witho
  const carryStart=companionFrame(52,width,body,1,'victoria'),carryEnd=companionFrame(54,width,body,1,'victoria');assert.equal(carryStart.action,'carry');assert.ok(carryEnd.x<carryStart.x);assert.ok(carryEnd.x+body<=width);
  }
 });
+
+test('Victoria locomotion has whole-cel horizontal registration for all 48 drawings',()=>{for(const stage of [0,1])for(const action of ['walk','run','turn']){const c=MASCOT_CLIPS[`victoria-${stage}-${action}`];assert.equal(c.horizontalOffsets?.length,48);assert.ok(c.horizontalOffsets?.every(Number.isInteger));assert.ok(Math.max(...c.horizontalOffsets!.map(Math.abs))<c.width/2);}});

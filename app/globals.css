@@ -179,3 +179,9 @@
 .mascot-bubble>.mascot-bubble-content{display:block;margin-top:0}
 
 @media(max-width:600px){:root{--phone-nav-height:calc(61px + env(safe-area-inset-bottom,0px))}.app-header nav{height:var(--phone-nav-height)}.mascot-companion{bottom:var(--phone-nav-height)!important}.mascot-bubble-content{max-height:calc(100dvh - 220px - var(--phone-nav-height))}}
+
+.mascot-companion .mascot-conversation{width:min(420px,calc(100vw - 28px));bottom:calc(100% + 12px)}
+.mascot-conversation>.mascot-conversation-heading{display:flex;justify-content:space-between;align-items:center;margin:0;padding:10px 14px 0}.mascot-conversation-heading strong{font-size:13px;font-weight:600;color:var(--text)}
+.mascot-conversation .mascot-bubble-content{padding:10px 14px 14px;max-height:min(540px,calc(100dvh - 235px))}
+.chat-compact{gap:10px}.chat-compact .chat-intro p{font-size:11px}.chat-compact .chat-messages{max-height:190px;min-height:60px}.chat-compact .chat-message{font-size:13px;padding:9px 11px}.chat-compact .chat-message.assistant{background:#fff;border:1px solid var(--line)}.chat-compact .chat-compose{gap:7px}.chat-compact .chat-compose textarea{min-height:54px;resize:vertical}.chat-compact .chat-compose>small,.chat-compact>p.small{font-size:10px}.chat-compact .chat-proposal{padding:10px}.chat-compact .chat-proposal dl{grid-template-columns:1fr 1fr;font-size:11px}.chat-compact .chat-compose .button{min-height:34px;width:auto;align-self:flex-end}
+@media(max-width:600px){.mascot-conversation .mascot-bubble-content{max-height:calc(100dvh - 245px - var(--phone-nav-height))}.chat-compact .chat-messages{max-height:130px}.mascot-conversation:focus-within .mascot-bubble-content{max-height:calc(100dvh - 235px - var(--phone-nav-height))}}
