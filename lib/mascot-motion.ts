@@ -1,4 +1,4 @@
-export type MascotAction='idle'|'walk'|'run'|'look'|'wave'|'fall'|'celebrate'|'scratch'|'stretch';
+export type MascotAction='idle'|'walk'|'run'|'look'|'wave'|'fall'|'celebrate'|'scratch'|'stretch'|'dance'|'sneeze';
 export interface CompanionFrame{x:number;action:MascotAction;actionTime:number;direction:1|-1;bubble:boolean;hidden:boolean;speed:number;walkPhase:number;phaseSpeed:number}
 const lerp=(a:number,b:number,t:number)=>a+(b-a)*Math.max(0,Math.min(1,t));
 /** Actor can fully leave the viewport without enlarging document scroll bounds. */

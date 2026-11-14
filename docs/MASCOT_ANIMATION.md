@@ -32,3 +32,7 @@ The approved character design stays unchanged. This pass adjusts registration an
 There are still eight drawn key poses per walk. Registration and timing fixes cannot create coherent anatomical in-betweens, repair inconsistent limb drawings, guarantee planted-foot locking, or create a true run from a walking cycle. No frame blending/ghosting is presented as new artwork, and no 24fps cinematic-quality claim is made. Further polish requires cleanup and actual in-between drawings (or a properly prepared 2D character rig) reviewed as animation.
 
 Automated tests check timing, boundaries, contact-key stops, proportional phase, registration and financial regressions. The user reviews naturalness in the existing app; no extra preview is shown.
+
+## 3D motion laboratory (web37)
+
+At the user's request, the earlier geometric 3D model is available again as an explicitly selected movement test. In Aparência do assistente, enable Testar movimentos com modelo 3D. It does not replace the approved illustrated design by default. Test controls play walk, run, six-second fall/get-up, dance, sneeze, wave and stretch, or an automatic in-place playlist. All actions work regardless of financial stage; manual actions return to rest and are separate from financial records. Disable the option to return to the approved illustrated mascot. These are procedural test routines, not finished film choreography.
