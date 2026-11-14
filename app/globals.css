@@ -101,3 +101,31 @@
 .owner-admin-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:6px 9px;border-radius:8px;color:var(--blue);font-size:12px;white-space:nowrap;flex-shrink:0;}
 .owner-admin-button:hover{background:#eaf3ff;}
 @media(max-width:600px){.owner-admin-button{width:36px;height:40px;min-height:40px;padding:0;}.owner-admin-button>span{display:none;}.header-right>.profile-control{width:100%;}.header-right .profile-button{min-width:0;flex:1;}}
+
+/* VR companion: pointer events only on character and controls, never a screen overlay. */
+.mascot-companion{position:fixed;left:var(--mascot-left);bottom:max(18px,env(safe-area-inset-bottom));width:112px;z-index:35;pointer-events:none;transition:left 4.4s linear}
+.mascot-body{pointer-events:auto;display:block;position:relative;background:none;border:0;padding:0;width:112px;cursor:pointer;transform-origin:50% 90%;border-radius:24px}
+.mascot-body:focus-visible{outline:3px solid #007aff;outline-offset:3px}
+.mascot-sprite{display:block;width:112px;aspect-ratio:501.5/784;background-size:400% 100%;background-repeat:no-repeat;filter:drop-shadow(0 4px 3px #00000016)}
+.mascot-sprite.victoria{aspect-ratio:543/724}
+.mascot-tools{pointer-events:auto;display:flex;justify-content:center;background:#ffffffed;box-shadow:0 2px 14px #00000012;border-radius:20px;opacity:0;transition:opacity .15s}
+.mascot-tools .icon{width:29px;height:28px;min-width:0}
+.mascot-companion:hover .mascot-tools,.mascot-companion:focus-within .mascot-tools{opacity:1}
+.mascot-chat-hint{position:absolute;right:4px;top:45%;background:white;padding:5px;border-radius:50%;color:#007aff;box-shadow:0 2px 8px #00000012}
+.mascot-bubble{position:absolute;bottom:calc(100% + 12px);width:290px;max-width:calc(100vw - 28px);background:#fff;border:1px solid #eeeef1;box-shadow:0 8px 32px #00000015;border-radius:20px;padding:18px;pointer-events:auto;color:#454549;animation:mascot-bubble .25s ease-out}
+.bubble-left .mascot-bubble{right:0}.bubble-right .mascot-bubble{left:0}
+.mascot-bubble:after{content:'';position:absolute;bottom:-7px;right:46px;width:13px;height:13px;background:white;transform:rotate(45deg);border-right:1px solid #eeeef1;border-bottom:1px solid #eeeef1}.bubble-right .mascot-bubble:after{left:45px;right:auto}
+.mascot-bubble strong{font-size:11px;color:#8a8a91;font-weight:500}.mascot-bubble p{font-size:14px;line-height:1.5;margin:8px 0}.mascot-bubble small{display:block;font-size:11px;line-height:1.5;margin:4px 0}.mascot-bubble>div{display:flex;justify-content:space-between;gap:12px;margin-top:12px}.mascot-bubble .text-button{font-size:12px}.mascot-close-bubble{position:absolute!important;right:5px;top:5px;width:24px!important;height:24px!important}
+.mascot-body.run{animation:mascot-run .26s infinite alternate ease-in-out}.mascot-body.stumble{animation:mascot-fall 2.8s both}.mascot-body.look{animation:mascot-look 2.8s both}.mascot-body.celebrate{animation:mascot-celebrate 2.8s both}
+@keyframes mascot-run{from{transform:translateY(0) rotate(-5deg)}to{transform:translateY(-9px) rotate(5deg)}}
+@keyframes mascot-fall{0%{transform:rotate(0)}15%{transform:rotate(-18deg) translateY(-5px)}32%,48%{transform:rotate(-78deg) translate(-12px,20px)}64%{transform:rotate(-35deg) translateY(5px)}82%{transform:rotate(7deg)}100%{transform:rotate(0)}}
+@keyframes mascot-look{0%,100%{transform:rotate(0)}22%,42%{transform:rotate(-12deg) translateX(-3px)}65%,80%{transform:rotate(10deg) translateX(3px)}}
+@keyframes mascot-celebrate{0%,40%,80%,100%{transform:translateY(0) rotate(0)}20%{transform:translateY(-18px) rotate(-7deg)}60%{transform:translateY(-12px) rotate(7deg)}}
+@keyframes mascot-bubble{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.mascot-settings>p{line-height:1.6}.mascot-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}.mascot-choice{border:2px solid transparent;border-radius:18px;background:#f5f5f7;padding:12px;display:flex;align-items:center;flex-direction:column;cursor:pointer;color:#454549}.mascot-choice.selected{border-color:#007aff;background:#f1f7ff}.mascot-choice .mascot-sprite{width:90px}.mascot-choice strong{font-size:14px;margin-top:8px}
+.mascot-expense-reaction{display:flex;align-items:center;gap:14px;background:#f5f5f7;border-radius:16px;padding:12px;margin-bottom:14px}.mascot-expense-reaction .mascot-sprite{width:72px}.mascot-expense-reaction p{font-size:14px;color:#454549}.mascot-expense-reaction small{display:block;margin-top:7px;color:#88888f;font-size:11px}.mascot-annoyed{animation:mascot-look 1.3s ease-in-out}
+.motion-off{transition:none!important}.motion-off .mascot-body,.motion-off .mascot-bubble{animation:none!important}
+@media(max-width:600px){.mascot-companion{bottom:max(12px,env(safe-area-inset-bottom));width:88px}.mascot-body,.mascot-body>.mascot-sprite{width:88px}.mascot-bubble{width:260px}.mascot-tools{opacity:1}.mascot-tools .icon{width:28px;height:26px}.mascot-bubble:after{right:32px}.bubble-right .mascot-bubble:after{left:32px}}
+@media(prefers-reduced-motion:reduce){.mascot-companion{transition:none}.mascot-body,.mascot-bubble,.mascot-annoyed{animation:none!important}}
+
+.mascot-refund-reminder{border-top:1px solid #eeeef1;margin-top:10px;padding-top:5px}.mascot-refund-reminder .text-button{margin-top:5px}.mascot-bubble{max-height:min(440px,calc(100dvh - 220px));overflow-y:auto}

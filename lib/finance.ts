@@ -1,3 +1,4 @@
+import {validMascot,type MascotPreferences} from './mascot.ts';
 export type Currency = 'EUR'|'BRL'|'USD';
 export type Mode = 'Avulsa'|'Fixa'|'Parcelada';
 export const CURRENCIES: Currency[] = ['EUR','BRL','USD'];
@@ -18,10 +19,10 @@ export interface Password { salt:string; digest:string; iterations:number }
 export interface ImportInfo { id:string; name:string; fingerprint:string; headers:string[] }
 export interface ExpenseView {sort:'original'|'asc'|'desc';typeFilter:string}
 export interface ChartPreferences {typeChart:'bars'|'pie';annualMode:'Todas'|Mode}
-export interface Profile {expenseView?:ExpenseView;chartPreferences?:ChartPreferences;widgetCatalogVersion?:number; id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
+export interface Profile {mascot?:MascotPreferences;expenseView?:ExpenseView;chartPreferences?:ChartPreferences;widgetCatalogVersion?:number; id:string; name:string; password?:Password; cards:BankCard[]; accounts:BankAccount[]; people:Person[]; entries:Entry[]; goals:Goal[]; savings:Saving[]; imports:ImportInfo[]; types:string[]; colors:Record<string,string>; widgets:string[]; month:string; widgetSizes?:Record<string,string> }
 export interface Workspace { schemaVersion:1; profiles:Profile[]; activeId:string|null }
 export interface Rates { date:string; fetchedAt:string; perEuro:Partial<Record<Currency,number>>; source:'ECB' }
-export const VERSION = '0.3.0-web.32';
+export const VERSION = '0.3.0-web.33';
 export const normalize = (s:string) => s.normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
 export const today = () => { const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export const currentMonth = () => today().slice(0,7);
@@ -128,7 +129,7 @@ export function validateWorkspace(input:unknown):Workspace {
  const unique=(items:{id:string}[])=>{const ids=new Set<string>();for(const x of items){if(!x||!text(x.id,100,true)||ids.has(x.id))fail('Identificadores inválidos ou repetidos.');ids.add(x.id);}};
  if(!input||typeof input!=='object')fail('Backup inválido.');const state=input as Workspace;
  if(state.schemaVersion!==1||!Array.isArray(state.profiles)||state.profiles.length>30)fail('Formato de dados incompatível.');unique(state.profiles);
- for(const p of state.profiles){if(!text(p.name,80,true))fail('Perfil inválido.');
+ for(const p of state.profiles){if(p.mascot!==undefined&&!validMascot(p.mascot))fail('Preferências do personagem inválidas.');if(!text(p.name,80,true))fail('Perfil inválido.');
  for(const key of ['cards','accounts','people','entries','goals','savings','imports','types','widgets'] as const)if(!Array.isArray(p[key]))fail('Dados incompletos no perfil.');
  if(p.entries.length>10000||p.cards.length>100||p.accounts.length>100||p.people.length>100||p.goals.length>100||p.savings.length>10000||p.imports.length>1000||p.types.length>100||p.widgets.length>ALLOWED_WIDGETS.length)fail('O backup excede os limites do aplicativo.');
  for(const key of ['cards','accounts','people','entries','goals','savings','imports'] as const)unique(p[key]);
