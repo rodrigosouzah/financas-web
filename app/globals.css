@@ -156,19 +156,13 @@
 .chat-mascot-portrait .mascot-cartoon-host{width:58px;height:90px}.mascot-expense-reaction .mascot-cartoon-host{width:72px;height:112px}
 @media(max-width:600px){.mascot-live-body>.mascot-cartoon-host{width:88px;height:138px}}
 
-.mascot-test-panel{position:fixed;left:clamp(12px,calc(var(--mascot-left) - 84px),calc(100vw - 292px));bottom:215px;width:280px;padding:14px;background:#fff;color:#454549;border-radius:16px;box-shadow:0 8px 28px #00000018;pointer-events:auto}
-.mascot-test-panel>strong{display:block;font-size:13px;font-weight:500;margin-bottom:10px}.mascot-test-panel>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.mascot-test-panel .button{justify-content:center;font-size:12px;min-height:34px}.mascot-test-panel small{display:block;font-size:11px;line-height:1.5;margin-top:8px}
-@media(max-width:600px){.mascot-test-panel{bottom:178px}.mascot-test-panel .button{min-height:40px}}
 
 .mascot-portrait-fallback{position:absolute;bottom:0;left:50%;width:112px;height:175px;transform:translateX(-50%)}
 .mascot-portrait-fallback .mascot-sprite{width:100%;height:100%;aspect-ratio:auto}
 .chat-mascot-portrait .mascot-portrait-fallback{width:58px;height:90px}.mascot-expense-reaction .mascot-portrait-fallback{width:72px;height:112px}
 @media(max-width:600px){.mascot-live-body .mascot-portrait-fallback{width:88px;height:138px}}
 
-.mascot-test-panel{max-height:calc(100dvh - 240px);overflow-y:auto;overscroll-behavior:contain}
-@media(max-width:600px){.mascot-test-panel{max-height:calc(100dvh - 202px)}}
 
-.mascot-test-panel>.mascot-test-outfits{display:flex;gap:6px;margin-bottom:8px}.mascot-test-outfits .button{flex:1;min-height:30px;font-size:11px}
 
 /* HQ speech balloon: an unclipped tail with a scrollable content pane. */
 .mascot-companion .mascot-bubble{border:2px solid #454549;border-radius:24px 26px 22px 25px;box-shadow:3px 4px 0 #45454918;overflow:visible;padding:0;background:#fff}
